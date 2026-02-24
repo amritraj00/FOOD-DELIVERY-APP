@@ -6,7 +6,7 @@ const Restaurant = require('../models/Restaurant');
 // @access  Private (user)
 exports.placeOrder = async (req, res) => {
   try {
-    const { restaurantId, items, deliveryAddress, subtotal, deliveryFee, tax, total, paymentMethod } = req.body;
+    const { restaurantId, items, deliveryAddress, subtotal, deliveryFee, tax, total, paymentMethod, upiId } = req.body;
 
     const restaurant = await Restaurant.findById(restaurantId);
     if (!restaurant) return res.status(404).json({ message: 'Restaurant not found' });
@@ -26,8 +26,9 @@ exports.placeOrder = async (req, res) => {
       tax: tax || 0,
       total,
       paymentMethod: paymentMethod || 'COD',
+      upiId: upiId || '',
       estimatedDelivery,
-      statusHistory: [{ status: 'Placed', message: 'Order received and being sent to restaurant.' }],
+      statusHistory: [{ status: 'Placed', message: 'Order received! Restaurant will confirm it shortly.' }],
     });
 
     // Simulate auto-progression in background
@@ -39,25 +40,44 @@ exports.placeOrder = async (req, res) => {
   }
 };
 
-// Simulate real-time order status updates (demo)
+// Auto-simulate only up to "Preparing". Admin must manually set "Out for Delivery".
 const simulateOrderProgress = (orderId) => {
   const stages = [
-    { status: 'Confirmed', delay: 30000, message: 'Restaurant has confirmed your order.' },
-    { status: 'Preparing', delay: 90000, message: 'Chef is preparing your food with care.' },
-    { status: 'Out for Delivery', delay: 180000, message: 'Delivery partner picked up your order.' },
-    { status: 'Delivered', delay: 360000, message: 'Order delivered. Enjoy your meal!' },
+    { status: 'Confirmed', delay: 60000, message: 'Restaurant has confirmed your order.' },
+    { status: 'Preparing', delay: 180000, message: 'Chef is preparing your food with care.' },
   ];
 
   stages.forEach(({ status, delay, message }) => {
     setTimeout(async () => {
       try {
-        await Order.findByIdAndUpdate(orderId, {
-          $set: { status },
-          $push: { statusHistory: { status, message, time: new Date() } },
-        });
+        const order = await Order.findById(orderId);
+        // Only advance if still in expected prior state (don't override manual admin changes)
+        if (!order) return;
+        const allowedPrior = { 'Confirmed': 'Placed', 'Preparing': 'Confirmed' };
+        if (order.status === allowedPrior[status]) {
+          await Order.findByIdAndUpdate(orderId, {
+            $set: { status },
+            $push: { statusHistory: { status, message, time: new Date() } },
+          });
+        }
       } catch (e) { /* ignore */ }
     }, delay);
   });
+};
+
+// Called when admin sets status to "Out for Delivery" — auto-delivers after 20 min
+const scheduleAutoDelivery = (orderId) => {
+  setTimeout(async () => {
+    try {
+      const order = await Order.findById(orderId);
+      if (order && order.status === 'Out for Delivery') {
+        await Order.findByIdAndUpdate(orderId, {
+          $set: { status: 'Delivered' },
+          $push: { statusHistory: { status: 'Delivered', message: 'Order delivered. Enjoy your meal! 🎉', time: new Date() } },
+        });
+      }
+    } catch (e) { /* ignore */ }
+  }, 20 * 60 * 1000); // 20 minutes
 };
 
 // @desc    Get logged-in user orders
@@ -114,9 +134,25 @@ exports.updateOrderStatus = async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
+    const statusMessages = {
+      'Out for Delivery': 'Delivery partner picked up your order and is on the way!',
+      'Delivered': 'Order delivered successfully. Enjoy your meal! 🎉',
+      'Cancelled': 'Order has been cancelled.',
+    };
+
     order.status = status;
-    order.statusHistory.push({ status, message: message || `Status updated to ${status}`, time: new Date() });
+    order.statusHistory.push({
+      status,
+      message: message || statusMessages[status] || `Status updated to ${status}`,
+      time: new Date()
+    });
     await order.save();
+
+    // When admin sets "Out for Delivery", auto-deliver after 20 minutes
+    if (status === 'Out for Delivery') {
+      scheduleAutoDelivery(order._id);
+    }
+
     res.json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });

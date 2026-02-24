@@ -14,6 +14,8 @@ const Cart = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [newAddress, setNewAddress] = useState({ label: "Home", street: "", city: "", state: "", pincode: "" });
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [upiId, setUpiId] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const subtotal = getTotalPrice();
   const deliveryFee = subtotal > 0 ? 2.99 : 0;
@@ -25,9 +27,15 @@ const Cart = () => {
   const imgSrc = (src) => src && src.startsWith("http") ? src : ("http://localhost:5000" + src);
   const selectedAddr = userProfile && userProfile.addresses && userProfile.addresses[selectedAddressIdx];
 
-  const handleCheckout = async () => {
+  const handleCheckoutClick = () => {
     if (cartItems.length === 0) return;
     if (!selectedAddr) { toast.error("Please add a delivery address first!"); setShowAddressForm(true); return; }
+    if (paymentMethod === "UPI" && !upiId.trim()) { toast.error("Please enter your UPI ID"); return; }
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmOrder = async () => {
+    setShowConfirmModal(false);
     setLoading(true);
     try {
       const restaurantId = cartItems[0] && cartItems[0].restaurantId;
@@ -37,11 +45,11 @@ const Cart = () => {
         restaurantName,
         items: cartItems.map(item => ({ foodItem: item._id, name: item.name, price: item.price, image: item.image, quantity: item.quantity })),
         deliveryAddress: { label: selectedAddr.label, street: selectedAddr.street, city: selectedAddr.city, state: selectedAddr.state, pincode: selectedAddr.pincode, lat: selectedAddr.lat || 28.6139, lng: selectedAddr.lng || 77.2090 },
-        subtotal, deliveryFee, tax, total, paymentMethod,
+        subtotal, deliveryFee, tax, total, paymentMethod, upiId: paymentMethod === "UPI" ? upiId : "",
       };
       const order = await placeOrder(orderPayload);
       clearCart();
-      toast.success("Order placed successfully!");
+      toast.success("🎉 Order placed! Restaurant will confirm in ~1 minute.");
       navigate("/orders/" + order._id + "/track");
     } catch (error) {
       toast.error((error.response && error.response.data && error.response.data.message) || "Failed to place order.");
@@ -168,15 +176,37 @@ const Cart = () => {
                 {/* Payment */}
                 <div style={{ marginTop: "24px" }}>
                   <h2 className="cart-section-title" style={{ marginBottom: "16px" }}>Payment Method</h2>
-                  <div style={{ display: "flex", gap: "12px" }}>
-                    {["COD", "Online"].map(method => (
-                      <div key={method} onClick={() => setPaymentMethod(method)}
-                        style={{ flex: 1, border: "2px solid " + (paymentMethod === method ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "14px", cursor: "pointer", textAlign: "center", background: paymentMethod === method ? "rgba(255,71,87,0.04)" : "white", transition: "all 0.2s" }}>
-                        <div style={{ fontSize: "22px", marginBottom: "4px" }}>{method === "COD" ? "Cash" : "Online"}</div>
-                        <div style={{ fontWeight: 700, fontSize: "13px" }}>{method === "COD" ? "Cash on Delivery" : "Online Payment"}</div>
+                  <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                    {[
+                      { id: "COD", icon: "💵", label: "Cash on Delivery" },
+                      { id: "UPI", icon: "📱", label: "UPI Payment" },
+                      { id: "Online", icon: "💳", label: "Card / Net Banking" },
+                    ].map(({ id, icon, label }) => (
+                      <div key={id} onClick={() => setPaymentMethod(id)}
+                        style={{ flex: "1 1 120px", border: "2px solid " + (paymentMethod === id ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "14px", cursor: "pointer", textAlign: "center", background: paymentMethod === id ? "rgba(255,71,87,0.04)" : "white", transition: "all 0.2s" }}>
+                        <div style={{ fontSize: "24px", marginBottom: "4px" }}>{icon}</div>
+                        <div style={{ fontWeight: 700, fontSize: "12px", color: paymentMethod === id ? "var(--primary)" : "var(--text-secondary)" }}>{label}</div>
                       </div>
                     ))}
                   </div>
+                  {paymentMethod === "UPI" && (
+                    <div style={{ marginTop: "14px", background: "rgba(99,102,241,0.06)", border: "1.5px solid rgba(99,102,241,0.3)", borderRadius: "var(--radius-md)", padding: "16px" }}>
+                      <label style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1", display: "block", marginBottom: "8px" }}>📱 Enter UPI ID</label>
+                      <input
+                        className="form-input"
+                        value={upiId}
+                        onChange={e => setUpiId(e.target.value)}
+                        placeholder="yourname@upi (e.g. nitesh@okaxis)"
+                        style={{ borderColor: upiId ? "#6366f1" : "var(--border)" }}
+                      />
+                      <p style={{ fontSize: "11px", color: "var(--text-light)", marginTop: "6px" }}>Accepted: PhonePe, Google Pay, Paytm, BHIM</p>
+                    </div>
+                  )}
+                  {paymentMethod === "Online" && (
+                    <div style={{ marginTop: "14px", background: "rgba(16,185,129,0.06)", border: "1.5px solid rgba(16,185,129,0.3)", borderRadius: "var(--radius-md)", padding: "14px" }}>
+                      <p style={{ fontSize: "13px", color: "#059669", fontWeight: 600, margin: 0 }}>💳 You will be redirected to the payment gateway after confirming the order.</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -199,8 +229,8 @@ const Cart = () => {
                     <div style={{ color: "var(--text-secondary)" }}>{selectedAddr.street}, {selectedAddr.city}</div>
                   </div>
                 )}
-                <button className="btn btn-primary btn-lg" style={{ marginTop: "20px", borderRadius: "var(--radius-full)", width: "100%" }} onClick={handleCheckout} disabled={loading}>
-                  {loading ? "Placing Order..." : "Place Order  $" + total.toFixed(2)}
+                <button className="btn btn-primary btn-lg" style={{ marginTop: "20px", borderRadius: "var(--radius-full)", width: "100%" }} onClick={handleCheckoutClick} disabled={loading}>
+                  {loading ? "Placing Order..." : "Review & Confirm  $" + total.toFixed(2)}
                 </button>
                 <p style={{ fontSize: "12px", color: "var(--text-light)", textAlign: "center", marginTop: "12px" }}>Secure checkout | 30-min delivery</p>
                 <button className="btn btn-outline" style={{ width: "100%", fontSize: "13px", marginTop: "12px" }} onClick={() => navigate("/orders")}>View My Orders</button>
@@ -209,6 +239,65 @@ const Cart = () => {
           )}
         </div>
       </div>
+    </div>
+      {/* ── Confirmation Modal ── */}
+      {showConfirmModal && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }} onClick={() => setShowConfirmModal(false)}>
+          <div style={{ background: "white", borderRadius: "20px", padding: "32px", maxWidth: "480px", width: "100%", boxShadow: "0 25px 60px rgba(0,0,0,0.2)", animation: "slideUp 0.25s ease" }} onClick={e => e.stopPropagation()}>
+            <div style={{ textAlign: "center", marginBottom: "24px" }}>
+              <div style={{ fontSize: "48px" }}>🍽️</div>
+              <h2 style={{ fontWeight: 800, fontSize: "20px", margin: "8px 0 4px" }}>Confirm Your Order</h2>
+              <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Review the details before placing</p>
+            </div>
+
+            {/* Items summary */}
+            <div style={{ background: "var(--bg-secondary)", borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>
+              <div style={{ fontWeight: 700, fontSize: "13px", marginBottom: "10px", color: "var(--text-secondary)" }}>ORDER ITEMS</div>
+              {cartItems.map(item => (
+                <div key={item._id} style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", marginBottom: "6px" }}>
+                  <span>{item.name} × {item.quantity}</span>
+                  <span style={{ fontWeight: 600 }}>${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+              <div style={{ borderTop: "1px solid var(--border)", marginTop: "10px", paddingTop: "10px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>
+                  <span>Delivery + Tax</span><span>${(deliveryFee + tax).toFixed(2)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: "16px", color: "var(--primary)" }}>
+                  <span>Total</span><span>${total.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Address */}
+            {selectedAddr && (
+              <div style={{ background: "var(--bg-secondary)", borderRadius: "12px", padding: "14px", marginBottom: "16px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                <span style={{ fontSize: "20px" }}>📍</span>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: "13px" }}>Delivering to: {selectedAddr.label}</div>
+                  <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>{selectedAddr.street}, {selectedAddr.city}</div>
+                </div>
+              </div>
+            )}
+
+            {/* Payment */}
+            <div style={{ background: "var(--bg-secondary)", borderRadius: "12px", padding: "14px", marginBottom: "24px", display: "flex", gap: "10px", alignItems: "center" }}>
+              <span style={{ fontSize: "20px" }}>{paymentMethod === "COD" ? "💵" : paymentMethod === "UPI" ? "📱" : "💳"}</span>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: "13px" }}>Payment: {paymentMethod === "COD" ? "Cash on Delivery" : paymentMethod === "UPI" ? "UPI — " + upiId : "Card / Net Banking"}</div>
+                {paymentMethod === "UPI" && <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>UPI ID: {upiId}</div>}
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button className="btn btn-outline" style={{ flex: 1, borderRadius: "var(--radius-full)" }} onClick={() => setShowConfirmModal(false)}>Edit Order</button>
+              <button className="btn btn-primary" style={{ flex: 2, borderRadius: "var(--radius-full)", fontWeight: 800 }} onClick={handleConfirmOrder}>
+                ✅ Place Order · ${total.toFixed(2)}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

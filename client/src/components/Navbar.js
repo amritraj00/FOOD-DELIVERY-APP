@@ -112,6 +112,7 @@ const Navbar = () => {
                       <>
                         <DropdownItem icon="&#128202;" label="Dashboard" onClick={() => { navigate("/admin/dashboard"); setDropdownOpen(false); }} />
                         <DropdownItem icon="&#127981;" label="Restaurants" onClick={() => { navigate("/admin/restaurants"); setDropdownOpen(false); }} />
+                        <DropdownItem icon="&#128230;" label="Order Management" onClick={() => { navigate("/admin/orders"); setDropdownOpen(false); }} />
                       </>
                     )}
 

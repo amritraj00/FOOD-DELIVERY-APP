@@ -15,7 +15,10 @@ const Sidebar = () => {
         <span className="icon"></span> Dashboard
       </Link>
       <Link to="/admin/restaurants" className={`sidebar-link${pathname.includes("restaurants") ? " active" : ""}`}>
-        <span className="icon"></span> Restaurants
+        <span className="icon">🏪</span> Restaurants
+      </Link>
+      <Link to="/admin/orders" className={`sidebar-link${pathname === "/admin/orders" ? " active" : ""}`}>
+        <span className="icon">📦</span> Orders
       </Link>
       <div className="sidebar-label" style={{ marginTop: "16px" }}>Quick Links</div>
       <button className="sidebar-link" style={{ width: "100%", textAlign: "left" }} onClick={() => navigate("/")}>

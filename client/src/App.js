@@ -24,6 +24,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import AdminRestaurants from './pages/admin/AdminRestaurants';
 import AdminFoods from './pages/admin/AdminFoods';
+import AdminOrders from './pages/admin/AdminOrders';
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
               <Route path="/admin/dashboard" element={<PrivateRoute adminOnly={true}><Dashboard /></PrivateRoute>} />
               <Route path="/admin/restaurants" element={<PrivateRoute adminOnly={true}><AdminRestaurants /></PrivateRoute>} />
               <Route path="/admin/restaurants/:id/foods" element={<PrivateRoute adminOnly={true}><AdminFoods /></PrivateRoute>} />
+              <Route path="/admin/orders" element={<PrivateRoute adminOnly={true}><AdminOrders /></PrivateRoute>} />
 
               {/* Catch all route */}
               <Route path="*" element={<Navigate to="/" />} />

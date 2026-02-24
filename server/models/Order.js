@@ -31,7 +31,8 @@ const orderSchema = new mongoose.Schema(
     deliveryFee: { type: Number, default: 2.99 },
     tax: { type: Number, default: 0 },
     total: { type: Number, required: true },
-    paymentMethod: { type: String, enum: ['COD', 'Online'], default: 'COD' },
+    paymentMethod: { type: String, enum: ['COD', 'Online', 'UPI'], default: 'COD' },
+    upiId: { type: String, default: '' },
     status: {
       type: String,
       enum: ['Placed', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered', 'Cancelled'],
