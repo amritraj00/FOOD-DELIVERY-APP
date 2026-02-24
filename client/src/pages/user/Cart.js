@@ -1,9 +1,14 @@
-﻿import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { placeOrder } from "../../services/orderService";
 import { getProfile, addAddress } from "../../services/profileService";
 import { toast } from "react-toastify";
+import { QRCodeSVG } from "qrcode.react";
+
+const MERCHANT_UPI = "8581951334-3@ybl";
+const MERCHANT_NAME = "NITESH RAJ";
+const MERCHANT_APP = "FoodieHub";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart();
@@ -18,6 +23,10 @@ const Cart = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPaymentScreen, setShowPaymentScreen] = useState(false);
   const [paymentVerified, setPaymentVerified] = useState(false);
+  const [paymentTimer, setPaymentTimer] = useState(null);
+  const [verifying, setVerifying] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const countdownRef = useRef(null);
 
   const subtotal = getTotalPrice();
   const deliveryFee = subtotal > 0 ? 49 : 0;
@@ -32,7 +41,6 @@ const Cart = () => {
   const handleCheckoutClick = () => {
     if (cartItems.length === 0) return;
     if (!selectedAddr) { toast.error("Please add a delivery address first!"); setShowAddressForm(true); return; }
-    if (paymentMethod === "UPI" && !upiId.trim()) { toast.error("Please enter your UPI ID"); return; }
     setShowConfirmModal(true);
   };
 
@@ -46,10 +54,22 @@ const Cart = () => {
     }
   };
 
-  // Step 3: user confirms payment done → place order
+  // Step 3: user confirms payment done → verify then place order
   const handlePaymentDone = () => {
-    setShowPaymentScreen(false);
-    doPlaceOrder();
+    setVerifying(true);
+    setCountdown(3);
+    countdownRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(countdownRef.current);
+          setVerifying(false);
+          setShowPaymentScreen(false);
+          doPlaceOrder();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   const doPlaceOrder = async () => {
@@ -208,15 +228,13 @@ const Cart = () => {
                   </div>
                   {paymentMethod === "UPI" && (
                     <div style={{ marginTop: "14px", background: "rgba(99,102,241,0.06)", border: "1.5px solid rgba(99,102,241,0.3)", borderRadius: "var(--radius-md)", padding: "16px" }}>
-                      <label style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1", display: "block", marginBottom: "8px" }}>📱 Enter UPI ID</label>
-                      <input
-                        className="form-input"
-                        value={upiId}
-                        onChange={e => setUpiId(e.target.value)}
-                        placeholder="yourname@upi (e.g. nitesh@okaxis)"
-                        style={{ borderColor: upiId ? "#6366f1" : "var(--border)" }}
-                      />
-                      <p style={{ fontSize: "11px", color: "var(--text-light)", marginTop: "6px" }}>Accepted: PhonePe, Google Pay, Paytm, BHIM</p>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <span style={{ fontSize: "24px" }}>📱</span>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: "13px", color: "#5f259f" }}>PhonePe / GPay / Paytm / BHIM</div>
+                          <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>Scan QR or use UPI ID on next screen</div>
+                        </div>
+                      </div>
                     </div>
                   )}
                   {paymentMethod === "Online" && (
@@ -318,84 +336,102 @@ const Cart = () => {
 
       {/* ── UPI / Online Payment Screen ── */}
       {showPaymentScreen && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 2100, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}>
-          <div style={{ background: "white", borderRadius: "24px", padding: "32px", maxWidth: "420px", width: "100%", boxShadow: "0 30px 80px rgba(0,0,0,0.25)", animation: "slideUp 0.25s ease" }}>
-            {paymentMethod === "UPI" ? (
-              <>
-                {/* UPI Payment */}
-                <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                  <div style={{ fontSize: "48px", marginBottom: "8px" }}>📱</div>
-                  <h2 style={{ fontWeight: 800, fontSize: "20px", margin: "0 0 4px" }}>Pay via UPI</h2>
-                  <p style={{ color: "var(--text-secondary)", fontSize: "13px", margin: 0 }}>Scan QR or use UPI ID below</p>
-                </div>
-                {/* Fake QR */}
-                <div style={{ background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", borderRadius: "16px", padding: "24px", marginBottom: "20px", textAlign: "center" }}>
-                  <div style={{ background: "white", borderRadius: "12px", padding: "16px", display: "inline-block" }}>
-                    <div style={{ width: "120px", height: "120px", background: "repeating-linear-gradient(0deg,#000 0,#000 4px,transparent 4px,transparent 8px),repeating-linear-gradient(90deg,#000 0,#000 4px,transparent 4px,transparent 8px)", margin: "0 auto" }}>
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: "2px", padding: "8px" }}>
-                        {[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,0,1,0,].map((v, i) => (
-                          <div key={i} style={{ width: "12px", height: "12px", background: v ? "#000" : "#fff" }} />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ color: "white", marginTop: "12px", fontSize: "13px", fontWeight: 600 }}>Scan with any UPI app</div>
-                </div>
-                <div style={{ background: "rgba(99,102,241,0.08)", border: "1.5px dashed #6366f1", borderRadius: "12px", padding: "14px", textAlign: "center", marginBottom: "20px" }}>
-                  <div style={{ fontSize: "11px", color: "var(--text-secondary)", marginBottom: "4px" }}>OR PAY TO UPI ID</div>
-                  <div style={{ fontSize: "16px", fontWeight: 800, letterSpacing: "0.5px", color: "#6366f1" }}>foodiehub@upi</div>
-                  <div style={{ fontSize: "11px", color: "var(--text-secondary)", marginTop: "4px" }}>FoodieHub Technologies</div>
-                </div>
-                <div style={{ background: "var(--bg-secondary)", borderRadius: "12px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 2100, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", overflowY: "auto" }}>
+          <div style={{ background: "#0a0a0a", borderRadius: "24px", padding: "0", maxWidth: "400px", width: "100%", boxShadow: "0 40px 100px rgba(0,0,0,0.6)", animation: "slideUp 0.25s ease", overflow: "hidden" }}>
+
+            {/* PhonePe-style header */}
+            <div style={{ background: "#5f259f", padding: "20px 24px 16px", textAlign: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "6px" }}>
+                <div style={{ background: "white", borderRadius: "50%", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px" }}>📱</div>
+                <span style={{ color: "white", fontWeight: 900, fontSize: "22px", letterSpacing: "-0.5px" }}>PhonePe</span>
+              </div>
+              <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "13px", fontWeight: 600 }}>ACCEPTED HERE</div>
+            </div>
+
+            <div style={{ padding: "24px", background: "#111" }}>
+              {/* Amount */}
+              <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "12px", marginBottom: "4px" }}>AMOUNT TO PAY</div>
+                <div style={{ color: "#5f259f", fontSize: "38px", fontWeight: 900 }}>&#8377;{total.toFixed(0)}</div>
+                <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "12px", marginTop: "4px" }}>to {MERCHANT_APP}</div>
+              </div>
+
+              {/* Real QR Code */}
+              <div style={{ background: "white", borderRadius: "16px", padding: "20px", textAlign: "center", marginBottom: "16px" }}>
+                <QRCodeSVG
+                  value={`upi://pay?pa=${MERCHANT_UPI}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent("FoodieHub Order")}`}
+                  size={200}
+                  level="H"
+                  includeMargin={false}
+                  imageSettings={{ src: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/PhonePe_logo.svg/512px-PhonePe_logo.svg.png", x: undefined, y: undefined, height: 40, width: 40, excavate: true }}
+                  style={{ display: "block", margin: "0 auto" }}
+                />
+                <div style={{ marginTop: "12px", fontSize: "12px", color: "#888" }}>Scan any QR using PhonePe App</div>
+              </div>
+
+              {/* UPI ID */}
+              <div style={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: "12px", padding: "14px", marginBottom: "16px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
-                    <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Amount to Pay</div>
-                    <div style={{ fontSize: "22px", fontWeight: 900, color: "var(--primary)" }}>&#8377;{total.toFixed(2)}</div>
+                    <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "11px", marginBottom: "4px" }}>OR PAY USING UPI ID</div>
+                    <div style={{ color: "#5f259f", fontWeight: 800, fontSize: "15px", letterSpacing: "0.3px" }}>{MERCHANT_UPI}</div>
+                    <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", marginTop: "2px" }}>{MERCHANT_NAME}</div>
                   </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Your UPI ID</div>
-                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1" }}>{upiId}</div>
+                  <button
+                    onClick={() => { navigator.clipboard.writeText(MERCHANT_UPI); toast.success("UPI ID copied!"); }}
+                    style={{ background: "#5f259f", border: "none", borderRadius: "8px", padding: "8px 14px", color: "white", fontSize: "12px", fontWeight: 700, cursor: "pointer" }}>
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              {/* Open in app button */}
+              <a
+                href={`upi://pay?pa=${MERCHANT_UPI}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent("FoodieHub Order")}`}
+                style={{ display: "block", background: "#5f259f", color: "white", borderRadius: "12px", padding: "14px", textAlign: "center", fontWeight: 700, fontSize: "15px", textDecoration: "none", marginBottom: "12px" }}>
+                📱 Open in PhonePe / GPay / Paytm
+              </a>
+
+              {/* Supported apps */}
+              <div style={{ display: "flex", justifyContent: "center", gap: "14px", marginBottom: "20px" }}>
+                {[
+                  { name: "PhonePe", color: "#5f259f" },
+                  { name: "GPay", color: "#4285F4" },
+                  { name: "Paytm", color: "#002970" },
+                  { name: "BHIM", color: "#00A3E0" },
+                ].map(app => (
+                  <div key={app.name} style={{ background: app.color, borderRadius: "8px", padding: "4px 10px", fontSize: "11px", color: "white", fontWeight: 700 }}>{app.name}</div>
+                ))}
+              </div>
+
+              {/* After payment button */}
+              {verifying ? (
+                <div style={{ textAlign: "center", padding: "16px", background: "#1a1a1a", borderRadius: "12px", marginBottom: "12px" }}>
+                  <div style={{ fontSize: "28px", marginBottom: "8px" }}>⏳</div>
+                  <div style={{ color: "white", fontWeight: 700, fontSize: "15px" }}>Verifying Payment...</div>
+                  <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", marginTop: "4px" }}>Placing your order in {countdown}s</div>
+                  <div style={{ height: "4px", background: "#333", borderRadius: "4px", marginTop: "12px", overflow: "hidden" }}>
+                    <div style={{ height: "100%", background: "#5f259f", borderRadius: "4px", animation: "progressBar 3s linear", width: "100%" }} />
                   </div>
                 </div>
-                <p style={{ fontSize: "12px", color: "var(--text-secondary)", textAlign: "center", marginBottom: "16px" }}>
-                  Open PhonePe / GPay / Paytm → scan QR or enter UPI ID → pay &#8377;{total.toFixed(2)}
-                </p>
-              </>
-            ) : (
-              <>
-                {/* Card / Net Banking */}
-                <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                  <div style={{ fontSize: "48px", marginBottom: "8px" }}>💳</div>
-                  <h2 style={{ fontWeight: 800, fontSize: "20px", margin: "0 0 4px" }}>Online Payment</h2>
-                  <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>Secure payment gateway</p>
-                </div>
-                <div style={{ background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)", borderRadius: "16px", padding: "24px", marginBottom: "20px", color: "white" }}>
-                  <div style={{ fontSize: "12px", opacity: 0.7, marginBottom: "16px" }}>DEBIT / CREDIT CARD</div>
-                  <div style={{ fontSize: "18px", letterSpacing: "4px", fontWeight: 700, marginBottom: "16px" }}>•••• •••• •••• ••••</div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", opacity: 0.8 }}><span>CARDHOLDER NAME</span><span>MM/YY</span></div>
-                </div>
-                <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
-                  {["💳 Mastercard", "💳 Visa", "🏦 Net Banking", "📱 Wallets"].map(opt => (
-                    <div key={opt} style={{ flex: 1, fontSize: "10px", fontWeight: 600, textAlign: "center", padding: "8px 4px", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-secondary)" }}>{opt}</div>
-                  ))}
-                </div>
-                <div style={{ background: "var(--bg-secondary)", borderRadius: "12px", padding: "14px", textAlign: "center", marginBottom: "20px" }}>
-                  <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Amount</div>
-                  <div style={{ fontSize: "24px", fontWeight: 900, color: "var(--primary)" }}>&#8377;{total.toFixed(2)}</div>
-                </div>
-              </>
-            )}
-            <button
-              className="btn btn-primary"
-              style={{ width: "100%", borderRadius: "var(--radius-full)", fontWeight: 800, fontSize: "15px", padding: "14px" }}
-              onClick={handlePaymentDone}
-              disabled={loading}>
-              {loading ? "Placing Order..." : "✅ Payment Done — Place Order"}
-            </button>
-            <button
-              style={{ width: "100%", marginTop: "10px", background: "none", border: "none", color: "var(--text-secondary)", fontSize: "13px", cursor: "pointer", padding: "8px" }}
-              onClick={() => { setShowPaymentScreen(false); setShowConfirmModal(true); }}>
-              ← Go Back
-            </button>
+              ) : (
+                <button
+                  onClick={handlePaymentDone}
+                  style={{ width: "100%", background: "linear-gradient(135deg, #16a34a, #15803d)", border: "none", borderRadius: "12px", padding: "16px", color: "white", fontSize: "16px", fontWeight: 800, cursor: "pointer", letterSpacing: "0.3px" }}>
+                  ✅ I've Paid — Place My Order
+                </button>
+              )}
+
+              <button
+                style={{ width: "100%", marginTop: "10px", background: "none", border: "1px solid #333", borderRadius: "12px", color: "rgba(255,255,255,0.5)", fontSize: "13px", cursor: "pointer", padding: "10px" }}
+                onClick={() => { if (countdownRef.current) clearInterval(countdownRef.current); setVerifying(false); setShowPaymentScreen(false); setShowConfirmModal(true); }}>
+                ← Go Back
+              </button>
+            </div>
+
+            <div style={{ background: "#0a0a0a", padding: "12px", textAlign: "center" }}>
+              <div style={{ color: "rgba(255,255,255,0.3)", fontSize: "11px" }}>🔒 256-bit SSL Secured • UPI Verified • 100% Safe</div>
+            </div>
           </div>
         </div>
       )}

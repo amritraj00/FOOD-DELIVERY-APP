@@ -332,3 +332,5 @@ ul { list-style: none; }
 
 /* TRACK MAP responsive */
 @media (max-width: 860px) { .track-grid { grid-template-columns: 1fr !important; } }
+
+@keyframes progressBar { from { width: 100%; } to { width: 0%; } }
