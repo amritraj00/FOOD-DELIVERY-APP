@@ -16,10 +16,12 @@ const Cart = () => {
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [upiId, setUpiId] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showPaymentScreen, setShowPaymentScreen] = useState(false);
+  const [paymentVerified, setPaymentVerified] = useState(false);
 
   const subtotal = getTotalPrice();
-  const deliveryFee = subtotal > 0 ? 2.99 : 0;
-  const tax = parseFloat((subtotal * 0.08).toFixed(2));
+  const deliveryFee = subtotal > 0 ? 49 : 0;
+  const tax = parseFloat((subtotal * 0.05).toFixed(2)); // 5% GST
   const total = parseFloat((subtotal + deliveryFee + tax).toFixed(2));
 
   useEffect(() => { getProfile().then(setUserProfile).catch(() => {}); }, []);
@@ -34,8 +36,23 @@ const Cart = () => {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmOrder = async () => {
+  // Step 2: from confirm modal — if COD place directly, else show payment screen
+  const handleProceedToPayment = () => {
     setShowConfirmModal(false);
+    if (paymentMethod === "COD") {
+      doPlaceOrder();
+    } else {
+      setShowPaymentScreen(true);
+    }
+  };
+
+  // Step 3: user confirms payment done → place order
+  const handlePaymentDone = () => {
+    setShowPaymentScreen(false);
+    doPlaceOrder();
+  };
+
+  const doPlaceOrder = async () => {
     setLoading(true);
     try {
       const restaurantId = cartItems[0] && cartItems[0].restaurantId;
@@ -100,7 +117,7 @@ const Cart = () => {
                       <div className="cart-item-name">{item.name}</div>
                       <div className="cart-item-price">
                         {item.category && <span style={{ display: "inline-block", background: "rgba(255,71,87,0.08)", color: "var(--primary)", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "var(--radius-full)", marginBottom: "4px" }}>{item.category}</span>}
-                        <div>${item.price.toFixed(2)} each</div>
+                        <div>&#8377;{item.price.toFixed(2)} each</div>
                       </div>
                       <div className="qty-control" style={{ marginTop: "10px" }}>
                         <button className="qty-btn" onClick={() => { if (item.quantity === 1) { removeFromCart(item._id); } else { updateQuantity(item._id, -1); } }}>{item.quantity === 1 ? "X" : ""}</button>
@@ -108,7 +125,7 @@ const Cart = () => {
                         <button className="qty-btn" onClick={() => updateQuantity(item._id, 1)}>+</button>
                       </div>
                     </div>
-                    <div className="cart-item-total">${(item.price * item.quantity).toFixed(2)}</div>
+                    <div className="cart-item-total">&#8377;{(item.price * item.quantity).toFixed(2)}</div>
                   </div>
                 ))}
 
@@ -219,10 +236,10 @@ const Cart = () => {
                     <div><div style={{ fontSize: "11px", color: "var(--text-light)" }}>Ordering from</div><div style={{ fontWeight: 700, fontSize: "14px" }}>{cartItems[0].restaurantName}</div></div>
                   </div>
                 )}
-                <div className="summary-row"><span>Subtotal ({cartItems.reduce((s, i) => s + i.quantity, 0)} items)</span><span>${subtotal.toFixed(2)}</span></div>
-                <div className="summary-row"><span>Delivery fee</span><span>${deliveryFee.toFixed(2)}</span></div>
-                <div className="summary-row"><span>Tax (8%)</span><span>${tax.toFixed(2)}</span></div>
-                <div className="summary-row total"><span>Total</span><span style={{ color: "var(--primary)" }}>${total.toFixed(2)}</span></div>
+                <div className="summary-row"><span>Subtotal ({cartItems.reduce((s, i) => s + i.quantity, 0)} items)</span><span>&#8377;{subtotal.toFixed(2)}</span></div>
+                <div className="summary-row"><span>Delivery fee</span><span>&#8377;{deliveryFee.toFixed(2)}</span></div>
+                <div className="summary-row"><span>GST (5%)</span><span>&#8377;{tax.toFixed(2)}</span></div>
+                <div className="summary-row total"><span>Total</span><span style={{ color: "var(--primary)" }}>&#8377;{total.toFixed(2)}</span></div>
                 {selectedAddr && (
                   <div style={{ marginTop: "16px", padding: "12px", background: "var(--bg-secondary)", borderRadius: "var(--radius-sm)", fontSize: "13px" }}>
                     <div style={{ fontWeight: 700, marginBottom: "4px" }}>Delivering to:</div>
@@ -230,7 +247,7 @@ const Cart = () => {
                   </div>
                 )}
                 <button className="btn btn-primary btn-lg" style={{ marginTop: "20px", borderRadius: "var(--radius-full)", width: "100%" }} onClick={handleCheckoutClick} disabled={loading}>
-                  {loading ? "Placing Order..." : "Review & Confirm  $" + total.toFixed(2)}
+                  {loading ? "Placing Order..." : "Review & Confirm  \u20b9" + total.toFixed(2)}
                 </button>
                 <p style={{ fontSize: "12px", color: "var(--text-light)", textAlign: "center", marginTop: "12px" }}>Secure checkout | 30-min delivery</p>
                 <button className="btn btn-outline" style={{ width: "100%", fontSize: "13px", marginTop: "12px" }} onClick={() => navigate("/orders")}>View My Orders</button>
@@ -256,15 +273,15 @@ const Cart = () => {
               {cartItems.map(item => (
                 <div key={item._id} style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", marginBottom: "6px" }}>
                   <span>{item.name} × {item.quantity}</span>
-                  <span style={{ fontWeight: 600 }}>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span style={{ fontWeight: 600 }}>&#8377;{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
               <div style={{ borderTop: "1px solid var(--border)", marginTop: "10px", paddingTop: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>
-                  <span>Delivery + Tax</span><span>${(deliveryFee + tax).toFixed(2)}</span>
+                  <span>Delivery + GST</span><span>&#8377;{(deliveryFee + tax).toFixed(2)}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: "16px", color: "var(--primary)" }}>
-                  <span>Total</span><span>${total.toFixed(2)}</span>
+                  <span>Total</span><span>&#8377;{total.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -291,10 +308,94 @@ const Cart = () => {
 
             <div style={{ display: "flex", gap: "12px" }}>
               <button className="btn btn-outline" style={{ flex: 1, borderRadius: "var(--radius-full)" }} onClick={() => setShowConfirmModal(false)}>Edit Order</button>
-              <button className="btn btn-primary" style={{ flex: 2, borderRadius: "var(--radius-full)", fontWeight: 800 }} onClick={handleConfirmOrder}>
-                ✅ Place Order · ${total.toFixed(2)}
+              <button className="btn btn-primary" style={{ flex: 2, borderRadius: "var(--radius-full)", fontWeight: 800 }} onClick={handleProceedToPayment}>
+                {paymentMethod === "COD" ? "✅ Place Order" : "💳 Proceed to Pay"} · &#8377;{total.toFixed(2)}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── UPI / Online Payment Screen ── */}
+      {showPaymentScreen && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 2100, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}>
+          <div style={{ background: "white", borderRadius: "24px", padding: "32px", maxWidth: "420px", width: "100%", boxShadow: "0 30px 80px rgba(0,0,0,0.25)", animation: "slideUp 0.25s ease" }}>
+            {paymentMethod === "UPI" ? (
+              <>
+                {/* UPI Payment */}
+                <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                  <div style={{ fontSize: "48px", marginBottom: "8px" }}>📱</div>
+                  <h2 style={{ fontWeight: 800, fontSize: "20px", margin: "0 0 4px" }}>Pay via UPI</h2>
+                  <p style={{ color: "var(--text-secondary)", fontSize: "13px", margin: 0 }}>Scan QR or use UPI ID below</p>
+                </div>
+                {/* Fake QR */}
+                <div style={{ background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", borderRadius: "16px", padding: "24px", marginBottom: "20px", textAlign: "center" }}>
+                  <div style={{ background: "white", borderRadius: "12px", padding: "16px", display: "inline-block" }}>
+                    <div style={{ width: "120px", height: "120px", background: "repeating-linear-gradient(0deg,#000 0,#000 4px,transparent 4px,transparent 8px),repeating-linear-gradient(90deg,#000 0,#000 4px,transparent 4px,transparent 8px)", margin: "0 auto" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: "2px", padding: "8px" }}>
+                        {[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,0,1,0,].map((v, i) => (
+                          <div key={i} style={{ width: "12px", height: "12px", background: v ? "#000" : "#fff" }} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ color: "white", marginTop: "12px", fontSize: "13px", fontWeight: 600 }}>Scan with any UPI app</div>
+                </div>
+                <div style={{ background: "rgba(99,102,241,0.08)", border: "1.5px dashed #6366f1", borderRadius: "12px", padding: "14px", textAlign: "center", marginBottom: "20px" }}>
+                  <div style={{ fontSize: "11px", color: "var(--text-secondary)", marginBottom: "4px" }}>OR PAY TO UPI ID</div>
+                  <div style={{ fontSize: "16px", fontWeight: 800, letterSpacing: "0.5px", color: "#6366f1" }}>foodiehub@upi</div>
+                  <div style={{ fontSize: "11px", color: "var(--text-secondary)", marginTop: "4px" }}>FoodieHub Technologies</div>
+                </div>
+                <div style={{ background: "var(--bg-secondary)", borderRadius: "12px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                  <div>
+                    <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Amount to Pay</div>
+                    <div style={{ fontSize: "22px", fontWeight: 900, color: "var(--primary)" }}>&#8377;{total.toFixed(2)}</div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Your UPI ID</div>
+                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1" }}>{upiId}</div>
+                  </div>
+                </div>
+                <p style={{ fontSize: "12px", color: "var(--text-secondary)", textAlign: "center", marginBottom: "16px" }}>
+                  Open PhonePe / GPay / Paytm → scan QR or enter UPI ID → pay &#8377;{total.toFixed(2)}
+                </p>
+              </>
+            ) : (
+              <>
+                {/* Card / Net Banking */}
+                <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                  <div style={{ fontSize: "48px", marginBottom: "8px" }}>💳</div>
+                  <h2 style={{ fontWeight: 800, fontSize: "20px", margin: "0 0 4px" }}>Online Payment</h2>
+                  <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>Secure payment gateway</p>
+                </div>
+                <div style={{ background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)", borderRadius: "16px", padding: "24px", marginBottom: "20px", color: "white" }}>
+                  <div style={{ fontSize: "12px", opacity: 0.7, marginBottom: "16px" }}>DEBIT / CREDIT CARD</div>
+                  <div style={{ fontSize: "18px", letterSpacing: "4px", fontWeight: 700, marginBottom: "16px" }}>•••• •••• •••• ••••</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", opacity: 0.8 }}><span>CARDHOLDER NAME</span><span>MM/YY</span></div>
+                </div>
+                <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+                  {["💳 Mastercard", "💳 Visa", "🏦 Net Banking", "📱 Wallets"].map(opt => (
+                    <div key={opt} style={{ flex: 1, fontSize: "10px", fontWeight: 600, textAlign: "center", padding: "8px 4px", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-secondary)" }}>{opt}</div>
+                  ))}
+                </div>
+                <div style={{ background: "var(--bg-secondary)", borderRadius: "12px", padding: "14px", textAlign: "center", marginBottom: "20px" }}>
+                  <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Amount</div>
+                  <div style={{ fontSize: "24px", fontWeight: 900, color: "var(--primary)" }}>&#8377;{total.toFixed(2)}</div>
+                </div>
+              </>
+            )}
+            <button
+              className="btn btn-primary"
+              style={{ width: "100%", borderRadius: "var(--radius-full)", fontWeight: 800, fontSize: "15px", padding: "14px" }}
+              onClick={handlePaymentDone}
+              disabled={loading}>
+              {loading ? "Placing Order..." : "✅ Payment Done — Place Order"}
+            </button>
+            <button
+              style={{ width: "100%", marginTop: "10px", background: "none", border: "none", color: "var(--text-secondary)", fontSize: "13px", cursor: "pointer", padding: "8px" }}
+              onClick={() => { setShowPaymentScreen(false); setShowConfirmModal(true); }}>
+              ← Go Back
+            </button>
           </div>
         </div>
       )}

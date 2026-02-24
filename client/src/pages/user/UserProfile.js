@@ -95,7 +95,7 @@ const UserProfile = () => {
             <div style={{ display: "flex", gap: "20px", marginTop: "24px", flexWrap: "wrap" }}>
               {[
                 { label: "Total Orders", value: orders.length },
-                { label: "Total Spent", value: "$" + totalSpent.toFixed(2) },
+                { label: "Total Spent", value: "₹" + totalSpent.toFixed(2) },
                 { label: "Addresses", value: (profile && profile.addresses && profile.addresses.length) || 0 },
               ].map(s => (
                 <div key={s.label} style={{ background: "rgba(255,255,255,0.15)", borderRadius: "var(--radius-md)", padding: "12px 20px", minWidth: "120px", textAlign: "center" }}>

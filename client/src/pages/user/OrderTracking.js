@@ -215,12 +215,12 @@ const OrderTracking = () => {
               {order.items.map((item, i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < order.items.length - 1 ? "1px solid var(--border)" : "none" }}>
                   <div style={{ fontSize: "14px" }}>{item.name} <span style={{ color: "var(--text-secondary)" }}>x{item.quantity}</span></div>
-                  <div style={{ fontWeight: 600, fontSize: "14px" }}>${(item.price * item.quantity).toFixed(2)}</div>
+                  <div style={{ fontWeight: 600, fontSize: "14px" }}>₹{(item.price * item.quantity).toFixed(2)}</div>
                 </div>
               ))}
               <div style={{ borderTop: "2px solid var(--border)", paddingTop: "12px", marginTop: "8px", display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: "16px" }}>
                 <span>Total</span>
-                <span style={{ color: "var(--primary)" }}>${order.total && order.total.toFixed(2)}</span>
+                <span style={{ color: "var(--primary)" }}>₹{order.total && order.total.toFixed(2)}</span>
               </div>
             </div>
 

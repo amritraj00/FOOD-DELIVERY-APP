@@ -98,7 +98,7 @@ const Orders = () => {
                           {order.deliveryAddress && (order.deliveryAddress.street + ", " + order.deliveryAddress.city)}
                         </div>
                         <div style={{ fontWeight: 800, fontSize: "18px", color: "var(--text-primary)", marginTop: "4px" }}>
-                          ${order.total && order.total.toFixed(2)} <span style={{ fontWeight: 400, fontSize: "12px", color: "var(--text-light)" }}>{order.paymentMethod}</span>
+                          ₹{order.total && order.total.toFixed(2)} <span style={{ fontWeight: 400, fontSize: "12px", color: "var(--text-light)" }}>{order.paymentMethod}</span>
                         </div>
                       </div>
                       <div style={{ display: "flex", gap: "10px" }}>

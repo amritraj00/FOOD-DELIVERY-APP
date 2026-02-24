@@ -144,7 +144,7 @@ const RestaurantMenu = () => {
                 🛒 {cartItems.reduce((s, i) => s + i.quantity, 0)} items in cart
               </span>
               <span style={{ fontWeight: 700 }}>
-                View Cart → ${cartItems.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2)}
+                View Cart → ₹{cartItems.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2)}
               </span>
             </div>
           )}
@@ -181,7 +181,7 @@ const RestaurantMenu = () => {
                         {food.description || 'Freshly prepared with the finest ingredients.'}
                       </p>
                       <div className="food-footer">
-                        <span className="food-price">${food.price.toFixed(2)}</span>
+                        <span className="food-price">₹{food.price.toFixed(2)}</span>
                         <button
                           className={`btn-add-cart${isAdded ? ' added' : ''}`}
                           onClick={() => handleAddToCart(food)}

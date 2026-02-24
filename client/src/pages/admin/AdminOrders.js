@@ -156,7 +156,7 @@ const AdminOrders = () => {
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-                      <span style={{ fontWeight: 800, fontSize: '15px', color: 'var(--primary)' }}>${order.total?.toFixed(2)}</span>
+                      <span style={{ fontWeight: 800, fontSize: '15px', color: 'var(--primary)' }}>₹{order.total?.toFixed(2)}</span>
                       <span title={order.paymentMethod} style={{ fontSize: '18px' }}>{payIcon[order.paymentMethod] || '💳'}</span>
                       <StatusBadge status={order.status} />
                       <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{expandedId === order._id ? '▲' : '▼'}</span>
@@ -173,11 +173,11 @@ const AdminOrders = () => {
                           {order.items?.map((item, i) => (
                             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', padding: '6px 0', borderBottom: '1px solid var(--bg-secondary)' }}>
                               <span>{item.name} × {item.quantity}</span>
-                              <span style={{ fontWeight: 600 }}>${(item.price * item.quantity).toFixed(2)}</span>
+                              <span style={{ fontWeight: 600 }}>₹{(item.price * item.quantity).toFixed(2)}</span>
                             </div>
                           ))}
                           <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, marginTop: '10px', fontSize: '15px', color: 'var(--primary)' }}>
-                            <span>Total</span><span>${order.total?.toFixed(2)}</span>
+                            <span>Total</span><span>₹{order.total?.toFixed(2)}</span>
                           </div>
                           {order.paymentMethod === 'UPI' && order.upiId && (
                             <div style={{ marginTop: '8px', fontSize: '13px', color: '#6366f1', background: 'rgba(99,102,241,0.07)', padding: '6px 10px', borderRadius: '8px' }}>
