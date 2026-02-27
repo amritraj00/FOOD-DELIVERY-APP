@@ -1,7 +1,7 @@
 {
-  "name": "food-delivery-backend",
+  "name": "bitebuddy-backend",
   "version": "1.0.0",
-  "description": "Restaurant & Food Management System Backend",
+  "description": "BiteBuddy — Smart Food Ordering Platform Backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

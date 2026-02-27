@@ -14,10 +14,10 @@ const CUISINE_ICONS = {
 };
 
 const FEATURES = [
-  { icon: '⚡', title: 'Fast Delivery', desc: 'Get your food in under 30 minutes or it\'s free!' },
-  { icon: '👨‍🍳', title: 'Top Chefs', desc: 'Partnered with award-winning restaurants and chefs.' },
-  { icon: '📱', title: 'Easy Ordering', desc: 'Order in seconds with our seamless, intuitive interface.' },
-  { icon: '🔒', title: 'Secure Payment', desc: 'Multiple payment options with bank-grade security.' },
+  { icon: '⚡', title: 'Swift Delivery', desc: 'Hot food at your door in under 30 minutes, every single time.' },
+  { icon: '🏆', title: 'Curated Venues', desc: 'Every restaurant is hand-verified for quality, hygiene and taste.' },
+  { icon: '📲', title: 'One-Tap Orders', desc: 'Pick a meal, choose your address and checkout in under a minute.' },
+  { icon: '🔐', title: 'Safe Payments', desc: 'COD, UPI and online with end-to-end encryption on every order.' },
 ];
 
 const HomePage = () => {
@@ -38,15 +38,15 @@ const HomePage = () => {
         <div className="hero-content">
           <div className="hero-text">
             <div className="hero-badge">
-              🔥 #1 Food Delivery Platform
+              🌟 Your Favourite Meals, Delivered
             </div>
             <h1 className="hero-title">
               Hungry?
-              <span className="highlight">Order Now.</span>
+              <span className="highlight">We've Got You.</span>
             </h1>
             <p className="hero-subtitle">
-              Discover the best food from top restaurants. Fresh ingredients, 
-              authentic recipes, and lighting-fast delivery to your door.
+              From crunchy street snacks to gourmet dinners — order from 
+              the best restaurants in your city and get it at your door, fast.
             </p>
             <div className="hero-cta">
               {user ? (
@@ -54,12 +54,12 @@ const HomePage = () => {
                   className="btn-hero-primary"
                   onClick={() => navigate('/restaurants')}
                 >
-                  🏪 Browse Restaurants
+                  �️ Browse Menus
                 </button>
               ) : (
                 <>
                   <Link to="/user/register" className="btn-hero-primary">
-                    🚀 Get Started — Free
+                    🚀 Join Free — Start Ordering
                   </Link>
                   <Link to="/user/login" className="btn-hero-secondary">
                     Sign In
@@ -69,15 +69,15 @@ const HomePage = () => {
             </div>
             <div className="hero-stats">
               <div className="hero-stat">
-                <div className="hero-stat-number">500+</div>
+                <div className="hero-stat-number">300+</div>
                 <div className="hero-stat-label">Restaurants</div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-number">50K+</div>
+                <div className="hero-stat-number">40K+</div>
                 <div className="hero-stat-label">Happy Users</div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-number">4.9★</div>
+                <div className="hero-stat-number">4.8★</div>
                 <div className="hero-stat-label">App Rating</div>
               </div>
             </div>
@@ -86,20 +86,20 @@ const HomePage = () => {
             <div className="hero-image-grid">
               <div className="hero-img-card">
                 <img
-                  src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80"
-                  alt="Pizza"
+                  src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80"
+                  alt="Indian Food"
                 />
               </div>
               <div className="hero-img-card">
                 <img
-                  src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80"
-                  alt="Burger"
+                  src="https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=600&q=80"
+                  alt="Tacos"
                 />
               </div>
               <div className="hero-img-card">
                 <img
-                  src="https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80"
-                  alt="Sushi"
+                  src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80"
+                  alt="Noodles"
                 />
               </div>
             </div>
@@ -111,10 +111,10 @@ const HomePage = () => {
       <div className="stats-strip">
         <div className="stats-strip-inner">
           {[
-            { icon: '🚚', value: '30 min', desc: 'Average delivery' },
+            { icon: '🚚', value: '25 min', desc: 'Average delivery' },
             { icon: '🎁', value: 'Free', desc: 'On first order' },
-            { icon: '🍽️', value: '500+', desc: 'Restaurants' },
-            { icon: '⭐', value: '4.9/5', desc: 'Customer rating' },
+            { icon: '🍽️', value: '300+', desc: 'Restaurants' },
+            { icon: '⭐', value: '4.8/5', desc: 'Customer rating' },
           ].map((s) => (
             <div className="stat-item" key={s.desc}>
               <div className="stat-icon">{s.icon}</div>
@@ -132,9 +132,9 @@ const HomePage = () => {
         <div className="container">
           <div className="section-header">
             <div className="section-tag">Explore</div>
-            <h2 className="section-title">What Are You Craving?</h2>
+            <h2 className="section-title">Pick Your Cuisine</h2>
             <p className="section-subtitle">
-              From Italian classics to spicy Indian curries, we have every cuisine covered.
+              From Indian classics to Japanese delights, every cuisine is a tap away.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '16px' }}>
@@ -182,9 +182,9 @@ const HomePage = () => {
           <div className="container">
             <div className="section-header">
               <div className="section-tag">Top Picks</div>
-              <h2 className="section-title">Featured Restaurants</h2>
+              <h2 className="section-title">Popular Near You</h2>
               <p className="section-subtitle">
-                Handpicked by our food experts for the ultimate dining experience.
+                Trending joints your neighbours can't get enough of.
               </p>
             </div>
             <div className="cards-grid">
@@ -212,7 +212,7 @@ const HomePage = () => {
                     <p className="restaurant-desc">{r.description}</p>
                     <div className="restaurant-meta">
                       <span className="meta-tag">⏱ {r.deliveryTime}</span>
-                      <span className="meta-tag">💰 Min ${r.minOrder}</span>
+                      <span className="meta-tag">💰 Min ₹{r.minOrder}</span>
                       <span className="rating-badge">⭐ {r.rating}</span>
                     </div>
                   </div>
@@ -237,16 +237,16 @@ const HomePage = () => {
         <div className="container">
           <div className="section-header">
             <div className="section-tag">Simple Process</div>
-            <h2 className="section-title">How FoodieHub Works</h2>
+            <h2 className="section-title">How BiteBuddy Works</h2>
             <p className="section-subtitle">
-              3 simple steps to get delicious food delivered to your door.
+              3 easy steps to get your favourite meal delivered.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '32px' }}>
             {[
-              { step: '01', icon: '🔍', title: 'Choose Restaurant', desc: 'Browse hundreds of restaurants and cuisines near you.' },
-              { step: '02', icon: '🛒', title: 'Pick Your Meal', desc: 'Select from extensive menus and add items to your cart.' },
-              { step: '03', icon: '🚚', title: 'Fast Delivery', desc: 'Sit back and relax. Your food arrives fresh and hot.' },
+              { step: '01', icon: '🔍', title: 'Browse Restaurants', desc: 'Explore hundreds of verified restaurants and their full menus.' },
+              { step: '02', icon: '🛒', title: 'Add to Cart', desc: 'Pick your dishes, customise quantities, and place your order.' },
+              { step: '03', icon: '🛵', title: 'Track & Enjoy', desc: 'Watch your order move in real-time and enjoy fresh hot food.' },
             ].map((step) => (
               <div
                 key={step.step}
@@ -275,7 +275,7 @@ const HomePage = () => {
         <div className="container">
           <div className="section-header">
             <div className="section-tag">Why Us</div>
-            <h2 className="section-title">The FoodieHub Difference</h2>
+            <h2 className="section-title">The BiteBuddy Advantage</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '24px' }}>
             {FEATURES.map((f) => (
@@ -296,7 +296,7 @@ const HomePage = () => {
                   width: '52px',
                   height: '52px',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(255,71,87,0.08)',
+                  background: 'rgba(124,58,237,0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -315,10 +315,81 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* RESTAURANT PARTNER BANNER */}
+      <section style={{
+        background: 'linear-gradient(135deg, #0f0a1e 0%, #1e1035 60%, #2e1065 100%)',
+        padding: '80px 24px',
+      }}>
+        <div className="container">
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '40px' }}>
+            <div style={{ maxWidth: '560px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(167,139,250,0.15)', border: '1px solid rgba(167,139,250,0.3)', borderRadius: '20px', padding: '6px 14px', fontSize: '12px', fontWeight: 700, color: '#a78bfa', letterSpacing: 1, textTransform: 'uppercase', marginBottom: '20px' }}>
+                🏪 Restaurant Partners
+              </div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px,3.5vw,42px)', color: 'white', fontWeight: 800, marginBottom: '16px', lineHeight: 1.2 }}>
+                Own a Restaurant?
+                <span style={{ color: '#a78bfa', display: 'block' }}>Join BiteBuddy Today.</span>
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '16px', lineHeight: 1.7, marginBottom: '32px' }}>
+                Reach thousands of hungry customers in your city. Set your own UPI for
+                direct payments, manage orders in real-time, and scale your business — all
+                from your personal BiteBuddy dashboard.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
+                <Link
+                  to="/restaurant/register"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '10px',
+                    padding: '14px 32px', background: 'linear-gradient(135deg,#7c3aed,#a78bfa)',
+                    color: 'white', borderRadius: 'var(--radius-full)', fontSize: '15px',
+                    fontWeight: 700, textDecoration: 'none',
+                    boxShadow: '0 8px 24px rgba(124,58,237,0.40)', transition: 'var(--transition)',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = ''}
+                >
+                  🚀 Register Your Restaurant
+                </Link>
+                <Link
+                  to="/restaurant/login"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '8px',
+                    padding: '14px 28px', background: 'rgba(255,255,255,0.08)',
+                    border: '1.5px solid rgba(255,255,255,0.2)',
+                    color: 'white', borderRadius: 'var(--radius-full)', fontSize: '14px',
+                    fontWeight: 600, textDecoration: 'none', transition: 'var(--transition)',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                >
+                  🔐 Already a Partner? Login
+                </Link>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: '220px' }}>
+              {[
+              { icon: '💳', title: 'Direct UPI Payments', desc: 'Funds land in your account — zero delay, zero commission.' },
+              { icon: '📊', title: 'Live Order Dashboard', desc: 'Track sales, orders and customer trends in real time.' },
+              { icon: '🛡️', title: 'Data Privacy', desc: 'Your details visible only to you and the admin.' },
+              { icon: '🌆', title: '20+ Cities', desc: 'Tap into a growing base of hungry customers near you.' },
+              ].map(f => (
+                <div key={f.title} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0 }}>{f.icon}</div>
+                  <div>
+                    <div style={{ color: 'white', fontWeight: 700, fontSize: '14px', marginBottom: '3px' }}>{f.title}</div>
+                    <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', lineHeight: 1.5 }}>{f.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA BANNER */}
       {!user && (
         <section style={{
-          background: 'linear-gradient(135deg, var(--primary) 0%, #c0392b 100%)',
+          background: 'linear-gradient(135deg, var(--primary) 0%, #5b21b6 100%)',
           padding: '80px 24px',
           textAlign: 'center',
         }}>
@@ -327,7 +398,7 @@ const HomePage = () => {
               Ready to Order?
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.80)', fontSize: '17px', marginBottom: '32px', maxWidth: '500px', margin: '0 auto 32px' }}>
-              Join 50,000+ users who order with FoodieHub every day.
+              Join 40,000+ users who order with BiteBuddy every day.
             </p>
             <Link
               to="/user/register"
@@ -354,10 +425,10 @@ const HomePage = () => {
       {/* FOOTER */}
       <footer style={{ background: 'var(--bg-dark)', color: 'rgba(255,255,255,0.60)', padding: '40px 24px', textAlign: 'center' }}>
         <div className="nav-brand" style={{ justifyContent: 'center', marginBottom: '16px' }}>
-          <span style={{ color: 'var(--primary)' }}>🍔</span>
-          <span style={{ color: 'white' }}>FoodieHub</span>
+          <span style={{ color: 'var(--primary)' }}>�️</span>
+          <span style={{ color: 'white' }}>BiteBuddy</span>
         </div>
-        <p style={{ fontSize: '14px' }}>© 2026 FoodieHub. All rights reserved. | Made with ❤️ for food lovers.</p>
+        <p style={{ fontSize: '14px' }}>© 2026 BiteBuddy. All rights reserved. | Built with ❤️ for food lovers everywhere.</p>
       </footer>
     </div>
   );

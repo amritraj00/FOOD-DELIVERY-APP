@@ -1,21 +1,28 @@
-# 🍔 Restaurant & Food Management System
+# �️ BiteBuddy — Smart Food Ordering Platform
 
-A complete production-ready MERN stack application for managing restaurants and food items with separate Admin and User interfaces.
+A fully-featured, production-ready MERN stack application for ordering food from local restaurants, with separate Admin, Restaurant Owner, and Customer interfaces.
 
 ## 🚀 Features
 
-### Admin Panel
+### Admin Control Centre
 - Secure admin authentication
-- Create, edit, and delete restaurants
-- Add, edit, and delete food items for restaurants
-- View all restaurants and their menus
+- Manage all restaurants on the platform
+- Add, edit, and remove food items by restaurant
+- View orders and payment details
 - Image upload for restaurants and food items
 
-### User Panel
-- User registration and login
-- Browse all restaurants
-- View restaurant menus with food items and prices
-- Responsive card-based UI
+### Customer Panel
+- Customer registration and login
+- Browse curated local restaurants
+- View full menus with prices and categories
+- Cart with UPI/COD payment support
+- Real-time order tracking
+
+### Restaurant Owner Portal
+- Separate owner login & registration
+- Manage menu items (add/edit/delete/toggle)
+- View & update incoming orders live
+- UPI payment management dashboard
 
 ## 🛠️ Tech Stack
 
@@ -56,8 +63,8 @@ npm install
 3. Create a `.env` file in the server directory:
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/food-delivery
-JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+MONGODB_URI=mongodb://localhost:27017/bitebuddy
+JWT_SECRET=bitebuddy_secret_jwt_key_change_in_production_99887
 NODE_ENV=development
 ```
 

@@ -1,7 +1,7 @@
 {
-  "name": "food-delivery-app",
+  "name": "bitebuddy-app",
   "version": "1.0.0",
-  "description": "Restaurant & Food Management System - MERN Stack",
+  "description": "BiteBuddy — Smart Food Ordering Platform - MERN Stack",
   "scripts": {
     "server": "cd server && npm run dev",
     "client": "cd client && npm start",
@@ -10,7 +10,7 @@
   },
   "keywords": [
     "mern",
-    "food-delivery",
+    "bitebuddy",
     "restaurant",
     "react",
     "node",

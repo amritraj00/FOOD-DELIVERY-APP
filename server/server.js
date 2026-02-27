@@ -13,8 +13,8 @@ connectDB();
 const app = express();
 
 // Body parser middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Enable CORS
 app.use(cors());
@@ -28,10 +28,11 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/restaurants', require('./routes/restaurantRoutes'));
 app.use('/api/foods', require('./routes/foodRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/restaurant-auth', require('./routes/restaurantAuthRoutes'));
 
 // Health check route
 app.get('/', (req, res) => {
-  res.json({ message: 'Food Delivery API is running...' });
+  res.json({ message: 'BiteBuddy API Server v1.0 — Online 🚀' });
 });
 
 // Error handling middleware
@@ -43,5 +44,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`[BiteBuddy] Server listening on port ${PORT}`);
 });

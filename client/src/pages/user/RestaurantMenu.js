@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getFoodItems } from '../../services/foodService';
 import { getRestaurantById } from '../../services/restaurantService';
@@ -6,8 +6,8 @@ import { useCart } from '../../context/CartContext';
 import { toast } from 'react-toastify';
 
 const CUISINE_ICONS = {
-  Italian: '🍕', American: '🍔', Japanese: '🍣', Indian: '🍛',
-  Chinese: '🥢', Mexican: '🌮', 'Multi-Cuisine': '🍽️',
+  Italian: '&#127829;', American: '&#127828;', Japanese: '&#127843;', Indian: '&#127835;',
+  Chinese: '&#129394;', Mexican: '&#127790;', 'Multi-Cuisine': '&#127869;',
 };
 
 const RestaurantMenu = () => {
@@ -90,14 +90,14 @@ const RestaurantMenu = () => {
                 onClick={() => navigate('/restaurants')}
                 style={{ marginBottom: '16px' }}
               >
-                ← Back
+                &larr; Back
               </button>
               <h1 className="menu-hero-title">{restaurant.name}</h1>
               <div className="menu-hero-meta">
-                <span>⭐ {restaurant.rating || '4.5'}</span>
-                <span>⏱ {restaurant.deliveryTime || '30-45 min'}</span>
-                <span>💰 Min ${restaurant.minOrder || 10}</span>
-                <span>{CUISINE_ICONS[restaurant.cuisine] || '🍽️'} {restaurant.cuisine}</span>
+                <span>&#11088; {restaurant.rating || '4.5'}</span>
+                <span>&#9201; {restaurant.deliveryTime || '30-45 min'}</span>
+                <span>Min &#8377;{restaurant.minOrder || 10}</span>
+                <span>{restaurant.cuisine}</span>
               </div>
               <p style={{ color: 'rgba(255,255,255,0.70)', fontSize: '14px', marginTop: '8px', maxWidth: '500px' }}>
                 {restaurant.description}
@@ -141,10 +141,10 @@ const RestaurantMenu = () => {
               onClick={() => navigate('/cart')}
             >
               <span style={{ fontWeight: 600 }}>
-                🛒 {cartItems.reduce((s, i) => s + i.quantity, 0)} items in cart
+                &#128722; {cartItems.reduce((s, i) => s + i.quantity, 0)} items in cart
               </span>
               <span style={{ fontWeight: 700 }}>
-                View Cart → ₹{cartItems.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2)}
+                View Cart &rarr; &#8377;{cartItems.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2)}
               </span>
             </div>
           )}
@@ -152,7 +152,7 @@ const RestaurantMenu = () => {
           {/* Food Grid */}
           {filtered.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">🍽️</div>
+              <div className="empty-icon">&#127869;</div>
               <h3 className="empty-title">No items in this category</h3>
               <p className="empty-desc">Try selecting a different category.</p>
             </div>
@@ -181,12 +181,12 @@ const RestaurantMenu = () => {
                         {food.description || 'Freshly prepared with the finest ingredients.'}
                       </p>
                       <div className="food-footer">
-                        <span className="food-price">₹{food.price.toFixed(2)}</span>
+                        <span className="food-price">&#8377;{food.price.toFixed(2)}</span>
                         <button
                           className={`btn-add-cart${isAdded ? ' added' : ''}`}
                           onClick={() => handleAddToCart(food)}
                         >
-                          {isAdded ? '✓ Added!' : qtyInCart > 0 ? `+1 (${qtyInCart})` : '+ Add'}
+                          {isAdded ? '&#10003; Added!' : qtyInCart > 0 ? `+1 (${qtyInCart})` : '+ Add'}
                         </button>
                       </div>
                     </div>
@@ -202,4 +202,5 @@ const RestaurantMenu = () => {
 };
 
 export default RestaurantMenu;
+
 

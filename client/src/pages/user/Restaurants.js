@@ -143,7 +143,7 @@ const Restaurants = () => {
                     <p className="restaurant-desc">{r.description}</p>
                     <div className="restaurant-meta">
                       <span className="meta-tag">⏱ {r.deliveryTime || '30-45 min'}</span>
-                      <span className="meta-tag">💰 Min ${r.minOrder || 10}</span>
+                      <span className="meta-tag">💰 Min ₹{r.minOrder || 10}</span>
                       <span className="rating-badge">⭐ {r.rating || '4.5'}</span>
                     </div>
                   </div>

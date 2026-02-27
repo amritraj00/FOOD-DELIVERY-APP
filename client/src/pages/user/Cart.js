@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { placeOrder } from "../../services/orderService";
 import { getProfile, addAddress } from "../../services/profileService";
+import { getRestaurantUpi } from "../../services/restaurantAuthService";
 import { toast } from "react-toastify";
 import { QRCodeSVG } from "qrcode.react";
 
-const MERCHANT_UPI = "8581951334-3@ybl";
-const MERCHANT_NAME = "NITESH RAJ";
-const MERCHANT_APP = "FoodieHub";
+// Fallback merchant (used only if restaurant has no UPI set)
+const FALLBACK_UPI = "8581951334-3@ybl";
+const FALLBACK_NAME = "NITESH RAJ";
+const MERCHANT_APP = "BiteBuddy";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart();
@@ -27,6 +29,8 @@ const Cart = () => {
   const [verifying, setVerifying] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const countdownRef = useRef(null);
+  const [restaurantUpiId, setRestaurantUpiId] = useState(FALLBACK_UPI);
+  const [restaurantUpiName, setRestaurantUpiName] = useState(FALLBACK_NAME);
 
   const subtotal = getTotalPrice();
   const deliveryFee = subtotal > 0 ? 49 : 0;
@@ -34,6 +38,18 @@ const Cart = () => {
   const total = parseFloat((subtotal + deliveryFee + tax).toFixed(2));
 
   useEffect(() => { getProfile().then(setUserProfile).catch(() => {}); }, []);
+
+  // Fetch the restaurant's UPI whenever cart has items
+  useEffect(() => {
+    const restId = cartItems[0]?.restaurantId;
+    if (!restId) return;
+    getRestaurantUpi(restId)
+      .then((data) => {
+        if (data.upiId) setRestaurantUpiId(data.upiId);
+        if (data.upiName) setRestaurantUpiName(data.upiName);
+      })
+      .catch(() => {}); // silently fall back to default
+  }, [cartItems]);
 
   const imgSrc = (src) => src && src.startsWith("http") ? src : ("http://localhost:5000" + src);
   const selectedAddr = userProfile && userProfile.addresses && userProfile.addresses[selectedAddressIdx];
@@ -136,7 +152,7 @@ const Cart = () => {
                     <div className="cart-item-info">
                       <div className="cart-item-name">{item.name}</div>
                       <div className="cart-item-price">
-                        {item.category && <span style={{ display: "inline-block", background: "rgba(255,71,87,0.08)", color: "var(--primary)", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "var(--radius-full)", marginBottom: "4px" }}>{item.category}</span>}
+                        {item.category && <span style={{ display: "inline-block", background: "rgba(124,58,237,0.08)", color: "var(--primary)", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "var(--radius-full)", marginBottom: "4px" }}>{item.category}</span>}
                         <div>&#8377;{item.price.toFixed(2)} each</div>
                       </div>
                       <div className="qty-control" style={{ marginTop: "10px" }}>
@@ -156,7 +172,7 @@ const Cart = () => {
                     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                       {userProfile.addresses.map((addr, idx) => (
                         <div key={idx} onClick={() => setSelectedAddressIdx(idx)}
-                          style={{ border: "2px solid " + (selectedAddressIdx === idx ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "14px 16px", cursor: "pointer", background: selectedAddressIdx === idx ? "rgba(255,71,87,0.04)" : "white", transition: "all 0.2s" }}>
+                          style={{ border: "2px solid " + (selectedAddressIdx === idx ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "14px 16px", cursor: "pointer", background: selectedAddressIdx === idx ? "rgba(124,58,237,0.04)" : "white", transition: "all 0.2s" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                             <div style={{ width: "18px", height: "18px", borderRadius: "50%", border: "2px solid " + (selectedAddressIdx === idx ? "var(--primary)" : "var(--border)"), display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                               {selectedAddressIdx === idx && <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--primary)" }} />}
@@ -169,7 +185,7 @@ const Cart = () => {
                       <button className="btn btn-outline" style={{ marginTop: "4px", width: "fit-content" }} onClick={() => setShowAddressForm(!showAddressForm)}>+ Add New Address</button>
                     </div>
                   ) : (
-                    <div style={{ background: "rgba(255,71,87,0.05)", border: "1.5px dashed var(--primary)", borderRadius: "var(--radius-md)", padding: "20px", textAlign: "center" }}>
+                    <div style={{ background: "rgba(124,58,237,0.05)", border: "1.5px dashed var(--primary)", borderRadius: "var(--radius-md)", padding: "20px", textAlign: "center" }}>
                       <p style={{ color: "var(--text-secondary)", marginBottom: "12px" }}>No saved addresses. Add one to continue.</p>
                       <button className="btn btn-primary" onClick={() => setShowAddressForm(true)}>+ Add Address</button>
                     </div>
@@ -220,7 +236,7 @@ const Cart = () => {
                       { id: "Online", icon: "💳", label: "Card / Net Banking" },
                     ].map(({ id, icon, label }) => (
                       <div key={id} onClick={() => setPaymentMethod(id)}
-                        style={{ flex: "1 1 120px", border: "2px solid " + (paymentMethod === id ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "14px", cursor: "pointer", textAlign: "center", background: paymentMethod === id ? "rgba(255,71,87,0.04)" : "white", transition: "all 0.2s" }}>
+                        style={{ flex: "1 1 120px", border: "2px solid " + (paymentMethod === id ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "14px", cursor: "pointer", textAlign: "center", background: paymentMethod === id ? "rgba(124,58,237,0.04)" : "white", transition: "all 0.2s" }}>
                         <div style={{ fontSize: "24px", marginBottom: "4px" }}>{icon}</div>
                         <div style={{ fontWeight: 700, fontSize: "12px", color: paymentMethod === id ? "var(--primary)" : "var(--text-secondary)" }}>{label}</div>
                       </div>
@@ -250,7 +266,7 @@ const Cart = () => {
                 <h2 className="cart-section-title">Order Summary</h2>
                 <div className="divider" />
                 {cartItems[0] && cartItems[0].restaurantName && (
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", padding: "10px 12px", background: "rgba(255,71,87,0.05)", borderRadius: "var(--radius-sm)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", padding: "10px 12px", background: "rgba(124,58,237,0.05)", borderRadius: "var(--radius-sm)" }}>
                     <div><div style={{ fontSize: "11px", color: "var(--text-light)" }}>Ordering from</div><div style={{ fontWeight: 700, fontSize: "14px" }}>{cartItems[0].restaurantName}</div></div>
                   </div>
                 )}
@@ -359,7 +375,7 @@ const Cart = () => {
               {/* Real QR Code */}
               <div style={{ background: "white", borderRadius: "16px", padding: "20px", textAlign: "center", marginBottom: "16px" }}>
                 <QRCodeSVG
-                  value={`upi://pay?pa=${MERCHANT_UPI}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent("FoodieHub Order")}`}
+                  value={`upi://pay?pa=${restaurantUpiId}&pn=${encodeURIComponent(restaurantUpiName)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent("BiteBuddy Order")}`}
                   size={200}
                   level="H"
                   includeMargin={false}
@@ -374,11 +390,11 @@ const Cart = () => {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "11px", marginBottom: "4px" }}>OR PAY USING UPI ID</div>
-                    <div style={{ color: "#5f259f", fontWeight: 800, fontSize: "15px", letterSpacing: "0.3px" }}>{MERCHANT_UPI}</div>
-                    <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", marginTop: "2px" }}>{MERCHANT_NAME}</div>
+                    <div style={{ color: "#5f259f", fontWeight: 800, fontSize: "15px", letterSpacing: "0.3px" }}>{restaurantUpiId}</div>
+                    <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", marginTop: "2px" }}>{restaurantUpiName}</div>
                   </div>
                   <button
-                    onClick={() => { navigator.clipboard.writeText(MERCHANT_UPI); toast.success("UPI ID copied!"); }}
+                    onClick={() => { navigator.clipboard.writeText(restaurantUpiId); toast.success("UPI ID copied!"); }}
                     style={{ background: "#5f259f", border: "none", borderRadius: "8px", padding: "8px 14px", color: "white", fontSize: "12px", fontWeight: 700, cursor: "pointer" }}>
                     Copy
                   </button>
@@ -387,7 +403,7 @@ const Cart = () => {
 
               {/* Open in app button */}
               <a
-                href={`upi://pay?pa=${MERCHANT_UPI}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent("FoodieHub Order")}`}
+                href={`upi://pay?pa=${restaurantUpiId}&pn=${encodeURIComponent(restaurantUpiName)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent("BiteBuddy Order")}`}
                 style={{ display: "block", background: "#5f259f", color: "white", borderRadius: "12px", padding: "14px", textAlign: "center", fontWeight: 700, fontSize: "15px", textDecoration: "none", marginBottom: "12px" }}>
                 📱 Open in PhonePe / GPay / Paytm
               </a>
@@ -440,3 +456,5 @@ const Cart = () => {
 };
 
 export default Cart;
+
+

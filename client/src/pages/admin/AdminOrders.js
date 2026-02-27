@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { getAllOrders, updateOrderStatus } from '../../services/orderService';
 import { toast } from 'react-toastify';
@@ -26,20 +26,23 @@ const Sidebar = () => {
   const navigate = useNavigate();
   return (
     <aside className="admin-sidebar">
-      <div className="sidebar-logo">⚙️ Admin Panel</div>
+      <div className="sidebar-logo">&#9881; Control Centre</div>
       <div className="sidebar-label">Management</div>
       <Link to="/admin/dashboard" className={`sidebar-link${pathname === '/admin/dashboard' ? ' active' : ''}`}>
-        <span className="icon">📊</span> Dashboard
+        <span className="icon">&#128202;</span> Dashboard
       </Link>
       <Link to="/admin/restaurants" className={`sidebar-link${pathname.includes('restaurants') ? ' active' : ''}`}>
-        <span className="icon">🏪</span> Restaurants
+        <span className="icon">&#127978;</span> Restaurants
+      </Link>
+      <Link to="/admin/restaurant-details" className={`sidebar-link${pathname === '/admin/restaurant-details' ? ' active' : ''}`}>
+        <span className="icon">&#128179;</span> Payment Details
       </Link>
       <Link to="/admin/orders" className={`sidebar-link${pathname === '/admin/orders' ? ' active' : ''}`}>
-        <span className="icon">📦</span> Orders
+        <span className="icon">&#128230;</span> Orders
       </Link>
       <div className="sidebar-label" style={{ marginTop: '16px' }}>Quick Links</div>
       <button className="sidebar-link" style={{ width: '100%', textAlign: 'left' }} onClick={() => navigate('/')}>
-        <span className="icon">🏠</span> View Site
+        <span className="icon">&#127968;</span> View Site
       </button>
     </aside>
   );
@@ -80,10 +83,8 @@ const AdminOrders = () => {
 
   const tabs = ['All', 'Placed', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered', 'Cancelled'];
   const filtered = filter === 'All' ? orders : orders.filter(o => o.status === filter);
-
   const pendingAction = orders.filter(o => o.status === 'Preparing').length;
-
-  const payIcon = { COD: '💵', UPI: '📱', Online: '💳' };
+  const payIcon = { COD: '&#128181;', UPI: '&#128241;', Online: '&#128179;' };
 
   return (
     <div className="page-wrapper">
@@ -97,13 +98,13 @@ const AdminOrders = () => {
                 {orders.length} total orders
                 {pendingAction > 0 && (
                   <span style={{ marginLeft: '12px', background: '#fef3c7', color: '#d97706', padding: '2px 10px', borderRadius: '999px', fontWeight: 700, fontSize: '13px' }}>
-                    ⚠️ {pendingAction} ready for dispatch
+                    &#9888; {pendingAction} ready for dispatch
                   </span>
                 )}
               </p>
             </div>
             <button className="btn btn-outline" onClick={fetchOrders} style={{ borderRadius: 'var(--radius-full)' }}>
-              🔄 Refresh
+              &#8635; Refresh
             </button>
           </div>
 
@@ -156,8 +157,8 @@ const AdminOrders = () => {
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-                      <span style={{ fontWeight: 800, fontSize: '15px', color: 'var(--primary)' }}>₹{order.total?.toFixed(2)}</span>
-                      <span title={order.paymentMethod} style={{ fontSize: '18px' }}>{payIcon[order.paymentMethod] || '💳'}</span>
+                      <span style={{ fontWeight: 800, fontSize: '15px', color: 'var(--primary)' }}>&#8377;{order.total?.toFixed(2)}</span>
+                      <span title={order.paymentMethod} style={{ fontSize: '18px' }} dangerouslySetInnerHTML={{ __html: payIcon[order.paymentMethod] || '&#128179;' }} />
                       <StatusBadge status={order.status} />
                       <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{expandedId === order._id ? '▲' : '▼'}</span>
                     </div>
@@ -172,16 +173,16 @@ const AdminOrders = () => {
                           <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px' }}>ORDER ITEMS</div>
                           {order.items?.map((item, i) => (
                             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', padding: '6px 0', borderBottom: '1px solid var(--bg-secondary)' }}>
-                              <span>{item.name} × {item.quantity}</span>
-                              <span style={{ fontWeight: 600 }}>₹{(item.price * item.quantity).toFixed(2)}</span>
+                              <span>{item.name} &times; {item.quantity}</span>
+                              <span style={{ fontWeight: 600 }}>&#8377;{(item.price * item.quantity).toFixed(2)}</span>
                             </div>
                           ))}
                           <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, marginTop: '10px', fontSize: '15px', color: 'var(--primary)' }}>
-                            <span>Total</span><span>₹{order.total?.toFixed(2)}</span>
+                            <span>Total</span><span>&#8377;{order.total?.toFixed(2)}</span>
                           </div>
                           {order.paymentMethod === 'UPI' && order.upiId && (
                             <div style={{ marginTop: '8px', fontSize: '13px', color: '#6366f1', background: 'rgba(99,102,241,0.07)', padding: '6px 10px', borderRadius: '8px' }}>
-                              📱 UPI: {order.upiId}
+                              &#128241; UPI: {order.upiId}
                             </div>
                           )}
                         </div>
@@ -196,7 +197,7 @@ const AdminOrders = () => {
                           <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>STATUS TIMELINE</div>
                           {order.statusHistory?.slice(-4).map((h, i) => (
                             <div key={i} style={{ fontSize: '12px', color: 'var(--text-secondary)', padding: '4px 0', borderLeft: '2px solid var(--primary)', paddingLeft: '10px', marginBottom: '4px' }}>
-                              <strong style={{ color: 'var(--text-primary)' }}>{h.status}</strong> — {new Date(h.time).toLocaleTimeString()}
+                              <strong style={{ color: 'var(--text-primary)' }}>{h.status}</strong> &mdash; {new Date(h.time).toLocaleTimeString()}
                             </div>
                           ))}
                         </div>
@@ -212,7 +213,7 @@ const AdminOrders = () => {
                                 onClick={() => handleStatusUpdate(order._id, 'Out for Delivery')}
                                 disabled={updating === order._id}
                                 style={{ background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white', border: 'none', borderRadius: '999px', padding: '10px 22px', fontWeight: 700, fontSize: '14px', cursor: 'pointer', opacity: updating === order._id ? 0.6 : 1 }}>
-                                🚴 {updating === order._id ? 'Updating...' : 'Dispatch — Out for Delivery'}
+                                &#128692; {updating === order._id ? 'Updating...' : 'Dispatch — Out for Delivery'}
                               </button>
                             )}
                             {order.status === 'Out for Delivery' && (
@@ -220,7 +221,7 @@ const AdminOrders = () => {
                                 onClick={() => handleStatusUpdate(order._id, 'Delivered')}
                                 disabled={updating === order._id}
                                 style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)', color: 'white', border: 'none', borderRadius: '999px', padding: '10px 22px', fontWeight: 700, fontSize: '14px', cursor: 'pointer', opacity: updating === order._id ? 0.6 : 1 }}>
-                                ✅ {updating === order._id ? 'Updating...' : 'Mark Delivered'}
+                                &#10003; {updating === order._id ? 'Updating...' : 'Mark Delivered'}
                               </button>
                             )}
                             {(order.status === 'Placed' || order.status === 'Confirmed' || order.status === 'Preparing') && (
@@ -228,13 +229,13 @@ const AdminOrders = () => {
                                 onClick={() => { if (window.confirm('Cancel this order?')) handleStatusUpdate(order._id, 'Cancelled'); }}
                                 disabled={updating === order._id}
                                 style={{ background: 'white', color: '#dc2626', border: '1.5px solid #fca5a5', borderRadius: '999px', padding: '8px 20px', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}>
-                                ✕ Cancel Order
+                                &#10005; Cancel Order
                               </button>
                             )}
                           </div>
                           {order.status === 'Preparing' && (
                             <p style={{ fontSize: '12px', color: '#d97706', marginTop: '10px', background: '#fef3c7', padding: '8px 12px', borderRadius: '8px' }}>
-                              ⚠️ This order is ready. Click "Dispatch" to send it out — delivery will auto-complete in 20 minutes.
+                              &#9888; This order is ready. Click "Dispatch" to send it out &mdash; delivery will auto-complete in 20 minutes.
                             </p>
                           )}
                         </div>
@@ -252,3 +253,4 @@ const AdminOrders = () => {
 };
 
 export default AdminOrders;
+

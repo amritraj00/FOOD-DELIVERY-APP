@@ -45,7 +45,7 @@ const Navbar = () => {
     <nav className={"navbar" + (scrolled ? " scrolled" : "")}>
       <div className="nav-container">
         <Link to={user ? (isAdmin ? "/admin/dashboard" : "/") : "/"} className="nav-brand">
-          FoodieHub
+          BiteBuddy
         </Link>
 
         <div className="nav-links">
@@ -72,9 +72,9 @@ const Navbar = () => {
               <div ref={dropdownRef} style={{ position: "relative" }}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  style={{ display: "flex", alignItems: "center", gap: "8px", background: dropdownOpen ? "rgba(255,71,87,0.1)" : "transparent", border: "1.5px solid", borderColor: dropdownOpen ? "var(--primary)" : "rgba(0,0,0,0.12)", borderRadius: "var(--radius-full)", padding: "6px 14px 6px 6px", cursor: "pointer", transition: "all 0.2s" }}
+                  style={{ display: "flex", alignItems: "center", gap: "8px", background: dropdownOpen ? "rgba(124,58,237,0.1)" : "transparent", border: "1.5px solid", borderColor: dropdownOpen ? "var(--primary)" : "rgba(0,0,0,0.12)", borderRadius: "var(--radius-full)", padding: "6px 14px 6px 6px", cursor: "pointer", transition: "all 0.2s" }}
                 >
-                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg,#ff4757,#ff6b81)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "14px", flexShrink: 0 }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "14px", flexShrink: 0 }}>
                     {initials}
                   </div>
                   <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--text-primary)" }}>{user.name && user.name.split(" ")[0]}</span>
@@ -86,9 +86,9 @@ const Navbar = () => {
                 {dropdownOpen && (
                   <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: "white", borderRadius: "var(--radius-md)", boxShadow: "0 8px 32px rgba(0,0,0,0.15)", border: "1px solid var(--border)", minWidth: "220px", zIndex: 1000, overflow: "hidden" }}>
                     {/* User info header */}
-                    <div style={{ padding: "16px", background: "linear-gradient(135deg,rgba(255,71,87,0.06),rgba(255,71,87,0.02))", borderBottom: "1px solid var(--border)" }}>
+                    <div style={{ padding: "16px", background: "linear-gradient(135deg,rgba(124,58,237,0.06),rgba(124,58,237,0.02))", borderBottom: "1px solid var(--border)" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "linear-gradient(135deg,#ff4757,#ff6b81)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: "18px", flexShrink: 0 }}>
+                        <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: "18px", flexShrink: 0 }}>
                           {initials}
                         </div>
                         <div>
@@ -133,6 +133,27 @@ const Navbar = () => {
               <Link to="/" className={isActive("/")}>Home</Link>
               <Link to="/user/login" className={isActive("/user/login")}>Login</Link>
               <Link to="/user/register" className="btn btn-primary btn-sm">Sign Up</Link>
+              <Link
+                to="/restaurant/register"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  padding: '8px 16px',
+                  background: 'linear-gradient(135deg,#7c3aed,#a78bfa)',
+                  color: 'white',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  boxShadow: '0 2px 8px rgba(124,58,237,0.35)',
+                  transition: 'var(--transition)',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              >
+                🏪 Partner with Us
+              </Link>
+              <Link to="/restaurant/login" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', textDecoration: 'none' }}>Restaurant Login</Link>
               <Link to="/admin/login" className={isActive("/admin/login")}>Admin</Link>
             </>
           )}

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Restaurant = require('../models/Restaurant');
 
 // Protect routes - verify JWT token
 exports.protect = async (req, res, next) => {
@@ -41,5 +42,31 @@ exports.admin = (req, res, next) => {
     next();
   } else {
     res.status(403).json({ message: 'Access denied. Admin only.' });
+  }
+};
+
+// Restaurant owner middleware – verifies JWT and sets req.restaurantId
+exports.restaurantOwner = async (req, res, next) => {
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      if (decoded.role !== 'restaurant_owner') {
+        return res.status(403).json({ message: 'Access denied. Restaurant owner only.' });
+      }
+
+      const restaurant = await Restaurant.findById(decoded.id).select('-ownerPassword');
+      if (!restaurant) return res.status(401).json({ message: 'Restaurant not found.' });
+
+      req.restaurantId = restaurant._id;
+      req.restaurant = restaurant;
+      next();
+    } catch (error) {
+      return res.status(401).json({ message: 'Not authorized, token failed.' });
+    }
+  } else {
+    return res.status(401).json({ message: 'Not authorized, no token.' });
   }
 };

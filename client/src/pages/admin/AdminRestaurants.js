@@ -17,6 +17,9 @@ const Sidebar = () => {
       <Link to="/admin/restaurants" className={`sidebar-link${pathname.includes("restaurants") ? " active" : ""}`}>
         <span className="icon">🏪</span> Restaurants
       </Link>
+      <Link to="/admin/restaurant-details" className={`sidebar-link${pathname === "/admin/restaurant-details" ? " active" : ""}`}>
+        <span className="icon">💳</span> Payment Details
+      </Link>
       <Link to="/admin/orders" className={`sidebar-link${pathname === "/admin/orders" ? " active" : ""}`}>
         <span className="icon">📦</span> Orders
       </Link>
@@ -122,7 +125,7 @@ const AdminRestaurants = () => {
                         </div>
                       </td>
                       <td>
-                        <span style={{ background: "rgba(255,71,87,0.08)", color: "var(--primary)", padding: "4px 10px", borderRadius: "var(--radius-full)", fontSize: "12px", fontWeight: 700 }}>
+                        <span style={{ background: "rgba(124,58,237,0.08)", color: "var(--primary)", padding: "4px 10px", borderRadius: "var(--radius-full)", fontSize: "12px", fontWeight: 700 }}>
                           {r.cuisine}
                         </span>
                       </td>
@@ -171,3 +174,4 @@ const AdminRestaurants = () => {
 };
 
 export default AdminRestaurants;
+

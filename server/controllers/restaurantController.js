@@ -58,9 +58,14 @@ exports.createRestaurant = async (req, res) => {
       cuisine: cuisine || 'Multi-Cuisine',
       rating: rating || 4.5,
       deliveryTime: deliveryTime || '30-45 min',
-      minOrder: minOrder || 10,
+      minOrder: minOrder || 99,
       image,
       createdBy: req.user._id,
+      // Provide safe defaults so ownerEmail unique constraint is satisfied
+      ownerName: req.body.ownerName || name,
+      ownerEmail: req.body.ownerEmail || `admin_${Date.now()}@bitebuddy.com`,
+      ownerPassword: req.body.ownerPassword || 'AdminCreated@123',
+      ownerPhone: req.body.ownerPhone || '',
     });
 
     res.status(201).json(restaurant);

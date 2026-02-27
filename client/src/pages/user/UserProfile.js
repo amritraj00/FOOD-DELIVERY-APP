@@ -79,7 +79,7 @@ const UserProfile = () => {
     <div className="page-wrapper">
       <div style={{ paddingTop: "80px", paddingBottom: "40px", background: "var(--bg-secondary)", minHeight: "100vh" }}>
         {/* Header banner */}
-        <div style={{ background: "linear-gradient(135deg, #ff4757 0%, #ff6b81 100%)", padding: "36px 20px 80px" }}>
+        <div style={{ background: "linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)", padding: "36px 20px 80px" }}>
           <div style={{ maxWidth: "900px", margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
               <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: "rgba(255,255,255,0.2)", border: "3px solid rgba(255,255,255,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", fontWeight: 800, color: "white", flexShrink: 0 }}>
@@ -217,7 +217,7 @@ const UserProfile = () => {
                   {profile && profile.addresses && profile.addresses.length > 0 ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                       {profile.addresses.map((addr, idx) => (
-                        <div key={idx} style={{ border: "1.5px solid " + (addr.isDefault ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "16px 18px", background: addr.isDefault ? "rgba(255,71,87,0.02)" : "white" }}>
+                        <div key={idx} style={{ border: "1.5px solid " + (addr.isDefault ? "var(--primary)" : "var(--border)"), borderRadius: "var(--radius-md)", padding: "16px 18px", background: addr.isDefault ? "rgba(124,58,237,0.02)" : "white" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                             <div>
                               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
@@ -278,12 +278,12 @@ const UserProfile = () => {
                           <div>
                             <div style={{ fontWeight: 700, marginBottom: "4px" }}>{order.restaurantName}</div>
                             <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
-                              {order.items.slice(0, 2).map(i => i.name).join(", ")}{order.items.length > 2 ? " +" + (order.items.length - 2) + " more" : ""} &bull; ${order.total && order.total.toFixed(2)}
+                              {order.items.slice(0, 2).map(i => i.name).join(", ")}{order.items.length > 2 ? " +" + (order.items.length - 2) + " more" : ""} &bull; ₹{order.total && order.total.toFixed(2)}
                             </div>
                             <div style={{ fontSize: "11px", color: "var(--text-light)", marginTop: "4px" }}>{new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
                           </div>
                           <div style={{ display: "flex", align: "center", gap: "10px", flexShrink: 0 }}>
-                            <span style={{ padding: "5px 12px", borderRadius: "var(--radius-full)", fontWeight: 700, fontSize: "12px", background: order.status === "Delivered" ? "rgba(34,197,94,0.1)" : order.status === "Cancelled" ? "rgba(239,68,68,0.1)" : "rgba(255,71,87,0.08)", color: order.status === "Delivered" ? "#22c55e" : order.status === "Cancelled" ? "#ef4444" : "var(--primary)" }}>{order.status}</span>
+                            <span style={{ padding: "5px 12px", borderRadius: "var(--radius-full)", fontWeight: 700, fontSize: "12px", background: order.status === "Delivered" ? "rgba(34,197,94,0.1)" : order.status === "Cancelled" ? "rgba(239,68,68,0.1)" : "rgba(124,58,237,0.08)", color: order.status === "Delivered" ? "#22c55e" : order.status === "Cancelled" ? "#ef4444" : "var(--primary)" }}>{order.status}</span>
                             {order.status !== "Delivered" && order.status !== "Cancelled" && (
                               <span style={{ fontSize: "12px", color: "var(--primary)", fontWeight: 600 }}>Track &rsaquo;</span>
                             )}
@@ -303,3 +303,4 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+

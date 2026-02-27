@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { createRestaurant, updateRestaurant } from '../services/restaurantService';
 import { toast } from 'react-toastify';
 
@@ -59,7 +59,7 @@ const RestaurantForm = ({ restaurant, onClose, onSuccess }) => {
       <div className="modal-content" style={{ maxWidth: '560px', maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2 className="modal-title">{restaurant ? 'Edit Restaurant' : 'Add Restaurant'}</h2>
-          <button className="modal-close" onClick={onClose}>×</button>
+          <button className="modal-close" onClick={onClose}>Ã—</button>
         </div>
         <form onSubmit={handleSubmit} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="form-group">
@@ -97,7 +97,7 @@ const RestaurantForm = ({ restaurant, onClose, onSuccess }) => {
             <input type="url" name="imageUrl" className="form-input" value={formData.imageUrl} onChange={handleChange} placeholder="https://images.unsplash.com/..." />
           </div>
           <div className="form-group">
-            <label className="form-label">— or upload a file {restaurant && '(replaces current)'}</label>
+            <label className="form-label">â€” or upload a file {restaurant && '(replaces current)'}</label>
             <input type="file" className="form-input" onChange={(e) => setImage(e.target.files[0])} accept="image/*" />
           </div>
           <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
@@ -113,3 +113,4 @@ const RestaurantForm = ({ restaurant, onClose, onSuccess }) => {
 };
 
 export default RestaurantForm;
+

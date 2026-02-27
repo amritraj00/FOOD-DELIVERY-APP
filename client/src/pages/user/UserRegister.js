@@ -33,21 +33,21 @@ const UserRegister = () => {
       <div className="auth-visual">
         <img
           className="auth-visual-img"
-          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80"
+          src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80"
           alt="Restaurant"
         />
         <div className="auth-visual-overlay" />
         <div className="auth-visual-content">
-          <div className="auth-logo" style={{ color: 'white' }}>🍔 FoodieHub</div>
-          <h2 className="auth-visual-title">Join Thousands of<br />Happy Foodies</h2>
+          <div className="auth-logo" style={{ color: 'white' }}>�️ BiteBuddy</div>
+          <h2 className="auth-visual-title">Great Food,<br />Delivered Fast</h2>
           <p className="auth-visual-subtitle">
-            Create your account and start exploring the best restaurants in your city.
-            Fresh food delivered to your door.
+            Sign up and start exploring the tastiest restaurants in your area.
+            Your next favourite meal is one tap away.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '32px' }}>
-            {['Free delivery on your first order', 'Track your order in real-time', 'Exclusive deals & discounts', '500+ restaurant choices'].map((feat) => (
+            {['Free delivery on your first order', 'Live order tracking on every delivery', 'Exclusive member deals & discounts', '300+ restaurant options city-wide'].map((feat) => (
               <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.85)', fontSize: '15px' }}>
-                <span style={{ color: '#2ed573', fontWeight: 700 }}>✓</span> {feat}
+                <span style={{ color: '#a78bfa', fontWeight: 700 }}>✓</span> {feat}
               </div>
             ))}
           </div>
@@ -56,9 +56,9 @@ const UserRegister = () => {
 
       <div className="auth-form-side">
         <div className="auth-form-inner">
-          <div className="auth-logo">🍔 FoodieHub</div>
+          <div className="auth-logo">�️ BiteBuddy</div>
           <h1 className="auth-heading">Create account</h1>
-          <p className="auth-subheading">Start your food journey today — it's free!</p>
+          <p className="auth-subheading">Your next favourite meal is just one step away!</p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">

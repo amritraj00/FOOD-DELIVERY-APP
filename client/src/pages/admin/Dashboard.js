@@ -8,13 +8,16 @@ const Sidebar = () => {
   const navigate = useNavigate();
   return (
     <aside className="admin-sidebar">
-      <div className="sidebar-logo">⚙️ Admin Panel</div>
+      <div className="sidebar-logo">⚙️ Control Centre</div>
       <div className="sidebar-label">Management</div>
       <Link to="/admin/dashboard" className={`sidebar-link${pathname === '/admin/dashboard' ? ' active' : ''}`}>
         <span className="icon">📊</span> Dashboard
       </Link>
       <Link to="/admin/restaurants" className={`sidebar-link${pathname.includes('restaurants') ? ' active' : ''}`}>
         <span className="icon">🏪</span> Restaurants
+      </Link>
+      <Link to="/admin/restaurant-details" className={`sidebar-link${pathname === '/admin/restaurant-details' ? ' active' : ''}`}>
+        <span className="icon">💳</span> Payment Details
       </Link>
       <Link to="/admin/orders" className={`sidebar-link${pathname === '/admin/orders' ? ' active' : ''}`}>
         <span className="icon">📦</span> Orders
@@ -63,10 +66,10 @@ const Dashboard = () => {
           {/* Stats */}
           <div className="stats-grid">
             {[
-              { icon: '🏪', value: loading ? '...' : restaurants.length, label: 'Total Restaurants', color: 'red' },
-              { icon: '🍽️', value: loading ? '...' : restaurants.length * 6, label: 'Menu Items', color: 'blue' },
-              { icon: '📦', value: '0', label: 'Active Orders', color: 'orange' },
-              { icon: '💰', value: '$0', label: 'Today\'s Revenue', color: 'green' },
+              { icon: '🏪', value: loading ? '...' : restaurants.length, label: 'Total Outlets', color: 'red' },
+              { icon: '🍽️', value: loading ? '...' : restaurants.length * 6, label: 'Dishes Available', color: 'blue' },
+              { icon: '📦', value: '0', label: 'Live Orders', color: 'orange' },
+              { icon: '💰', value: '₹0', label: 'Revenue Today', color: 'green' },
             ].map((stat) => (
               <div className="stat-card" key={stat.label}>
                 <div className={`stat-card-icon ${stat.color}`}>{stat.icon}</div>

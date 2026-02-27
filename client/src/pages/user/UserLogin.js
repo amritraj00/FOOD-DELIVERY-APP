@@ -33,26 +33,27 @@ const UserLogin = () => {
       <div className="auth-visual">
         <img
           className="auth-visual-img"
-          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80"
+          src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80"
           alt="Food"
         />
         <div className="auth-visual-overlay" />
         <div className="auth-visual-content">
-          <div className="auth-logo">🍔 FoodieHub</div>
+          <div className="auth-logo">�️ BiteBuddy</div>
           <h2 className="auth-visual-title">
-            Discover Amazing<br />Restaurants Near You
+            Fresh Food From The
+            <br />Best Spots Near You
           </h2>
           <p className="auth-visual-subtitle">
-            Order from hundreds of restaurants with real-time tracking, 
-            exclusive deals, and lightning-fast delivery.
+            Order from hundreds of curated restaurants with live tracking,
+            great deals, and lightning-fast delivery.
           </p>
           <div className="hero-stats" style={{ marginTop: '40px' }}>
             <div className="hero-stat">
-              <div className="hero-stat-number">500+</div>
+              <div className="hero-stat-number">300+</div>
               <div className="hero-stat-label">Restaurants</div>
             </div>
             <div className="hero-stat">
-              <div className="hero-stat-number">30min</div>
+              <div className="hero-stat-number">25min</div>
               <div className="hero-stat-label">Avg. Delivery</div>
             </div>
             <div className="hero-stat">
@@ -65,9 +66,9 @@ const UserLogin = () => {
 
       <div className="auth-form-side">
         <div className="auth-form-inner">
-          <div className="auth-logo">🍔 FoodieHub</div>
+          <div className="auth-logo">�️ BiteBuddy</div>
           <h1 className="auth-heading">Welcome back</h1>
-          <p className="auth-subheading">Sign in to your account to continue ordering</p>
+          <p className="auth-subheading">Sign in to continue your food journey</p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">

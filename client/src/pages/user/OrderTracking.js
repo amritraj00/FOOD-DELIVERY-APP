@@ -66,7 +66,7 @@ const OrderTracking = () => {
     }).addTo(map);
 
     const restaurantIcon = L.divIcon({
-      html: "<div style=\"width:36px;height:36px;border-radius:50%;background:#ff4757;display:flex;align-items:center;justify-content:center;font-size:18px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)\">&#127860;</div>",
+      html: "<div style=\"width:36px;height:36px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:18px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)\">&#127860;</div>",
       className: "", iconAnchor: [18, 18],
     });
     const homeIcon = L.divIcon({
@@ -82,7 +82,7 @@ const OrderTracking = () => {
     L.marker([destLat, destLng], { icon: homeIcon }).addTo(map).bindPopup("<b>Delivery Address</b><br>" + (order.deliveryAddress ? order.deliveryAddress.street + ", " + order.deliveryAddress.city : ""));
 
     // Draw dashed route line
-    L.polyline([[restLat, restLng], [destLat, destLng]], { color: "#ff4757", weight: 3, dashArray: "10,6", opacity: 0.7 }).addTo(map);
+    L.polyline([[restLat, restLng], [destLat, destLng]], { color: "#7c3aed", weight: 3, dashArray: "10,6", opacity: 0.7 }).addTo(map);
 
     // Animate delivery marker from restaurant toward home
     const deliveryMarker = L.marker([restLat, restLng], { icon: bikeIcon }).addTo(map);
@@ -153,12 +153,12 @@ const OrderTracking = () => {
             <div ref={mapRef} style={{ height: "420px", width: "100%", background: "#f0f0f0" }} />
             {order.status === "Out for Delivery" && (
               <div style={{ padding: "14px 16px", background: "white", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "12px" }}>
-                <div style={{ width: "42px", height: "42px", borderRadius: "50%", background: "linear-gradient(135deg,#ff4757,#ff6b81)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", flexShrink: 0 }}>&#128690;</div>
+                <div style={{ width: "42px", height: "42px", borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", flexShrink: 0 }}>&#128690;</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, fontSize: "14px" }}>{order.deliveryPersonName}</div>
                   <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Your delivery partner</div>
                 </div>
-                <a href={"tel:" + order.deliveryPersonPhone} style={{ background: "rgba(255,71,87,0.1)", color: "var(--primary)", padding: "8px 14px", borderRadius: "var(--radius-full)", fontSize: "13px", fontWeight: 700, textDecoration: "none" }}>
+                <a href={"tel:" + order.deliveryPersonPhone} style={{ background: "rgba(124,58,237,0.1)", color: "var(--primary)", padding: "8px 14px", borderRadius: "var(--radius-full)", fontSize: "13px", fontWeight: 700, textDecoration: "none" }}>
                   Call
                 </a>
               </div>
@@ -263,3 +263,4 @@ const MapLoader = ({ mapRef }) => {
 };
 
 export default OrderTracking;
+

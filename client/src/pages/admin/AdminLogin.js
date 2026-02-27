@@ -30,7 +30,7 @@ const AdminLogin = () => {
 
   return (
     <div className="auth-page">
-      <div className="auth-visual" style={{ background: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #2d1b69 100%)' }}>
+      <div className="auth-visual" style={{ background: 'linear-gradient(135deg, #0f0a1e 0%, #1e1035 50%, #2e1065 100%)' }}>
         <img
           className="auth-visual-img"
           src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=800&q=80"
@@ -39,15 +39,15 @@ const AdminLogin = () => {
         />
         <div className="auth-visual-overlay" />
         <div className="auth-visual-content">
-          <div className="auth-logo" style={{ color: 'white' }}>⚙️ Admin Panel</div>
+          <div className="auth-logo" style={{ color: 'white' }}>⚙️ Control Centre</div>
           <h2 className="auth-visual-title">
-            Restaurant<br />Management Hub
+            Platform<br />Administration Hub
           </h2>
           <p className="auth-visual-subtitle">
-            Manage your restaurant network, menus, and operations from one powerful dashboard.
+            Oversee restaurants, menus, and operations from one unified control panel.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '32px' }}>
-            {['Add & manage restaurants', 'Control menu items & pricing', 'Monitor orders & revenue', 'Full admin control'].map((feat) => (
+            {['Manage all restaurants', 'Control menu items & pricing', 'Monitor orders & analytics', 'Full admin privileges'].map((feat) => (
               <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.85)', fontSize: '15px' }}>
                 <span style={{ color: 'var(--accent)', fontWeight: 700 }}>⚡</span> {feat}
               </div>
@@ -55,16 +55,16 @@ const AdminLogin = () => {
           </div>
           <div style={{ marginTop: '32px', padding: '16px', background: 'rgba(255,255,255,0.08)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.15)' }}>
             <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: '12px', marginBottom: '6px' }}>Demo credentials:</p>
-            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', fontWeight: 600 }}>admin@food.com / admin123</p>
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', fontWeight: 600 }}>admin@bitebuddy.com / admin123</p>
           </div>
         </div>
       </div>
 
       <div className="auth-form-side">
         <div className="auth-form-inner">
-          <div className="auth-logo">⚙️ Admin Panel</div>
+          <div className="auth-logo">⚙️ Control Centre</div>
           <h1 className="auth-heading">Admin Sign In</h1>
-          <p className="auth-subheading">Access your restaurant management dashboard</p>
+          <p className="auth-subheading">Access your platform management dashboard</p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -75,7 +75,7 @@ const AdminLogin = () => {
                   type="email"
                   name="email"
                   className="form-input"
-                  placeholder="admin@food.com"
+                  placeholder="admin@bitebuddy.com"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -102,10 +102,10 @@ const AdminLogin = () => {
             <button
               type="submit"
               className="btn btn-primary btn-lg"
-              style={{ marginTop: '8px', background: 'linear-gradient(135deg, #1a1a2e, #2d1b69)' }}
+              style={{ marginTop: '8px', background: 'linear-gradient(135deg, #0f0a1e, #2e1065)' }}
               disabled={loading}
             >
-              {loading ? '⏳ Signing in...' : '⚙️ Access Dashboard'}
+              {loading ? '⏳ Signing in...' : '⚙️ Open Control Centre'}
             </button>
           </form>
 

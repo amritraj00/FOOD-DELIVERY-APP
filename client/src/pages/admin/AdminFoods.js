@@ -137,13 +137,13 @@ const AdminFoods = () => {
                         )}
                       </td>
                       <td>
-                        <span style={{ background: "rgba(255,71,87,0.08)", color: "var(--primary)", padding: "4px 10px", borderRadius: "var(--radius-full)", fontSize: "12px", fontWeight: 700 }}>
+                        <span style={{ background: "rgba(124,58,237,0.08)", color: "var(--primary)", padding: "4px 10px", borderRadius: "var(--radius-full)", fontSize: "12px", fontWeight: 700 }}>
                           {food.category || "Main Course"}
                         </span>
                       </td>
-                      <td><strong>${typeof food.price === "number" ? food.price.toFixed(2) : food.price}</strong></td>
+                      <td><strong>₹{typeof food.price === "number" ? food.price.toFixed(2) : food.price}</strong></td>
                       <td>
-                        <span style={{ background: food.isAvailable !== false ? "rgba(46,213,115,0.12)" : "rgba(255,71,87,0.1)", color: food.isAvailable !== false ? "var(--success)" : "var(--danger)", padding: "4px 10px", borderRadius: "var(--radius-full)", fontSize: "12px", fontWeight: 700 }}>
+                        <span style={{ background: food.isAvailable !== false ? "rgba(46,213,115,0.12)" : "rgba(124,58,237,0.1)", color: food.isAvailable !== false ? "var(--success)" : "var(--danger)", padding: "4px 10px", borderRadius: "var(--radius-full)", fontSize: "12px", fontWeight: 700 }}>
                           {food.isAvailable !== false ? "Available" : "Unavailable"}
                         </span>
                       </td>
@@ -185,3 +185,4 @@ const AdminFoods = () => {
 };
 
 export default AdminFoods;
+
